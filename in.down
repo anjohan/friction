@@ -3,6 +3,7 @@ include in.common_variables
 units metal
 boundary p p p
 atom_style	atomic
+timestep 0.002
 
 read_data betacristobalite.data
 replicate ${Lx_a} ${Ly_a} ${total_height_with_vacuum_a}
@@ -20,12 +21,27 @@ group top_vacuum region top_vacuum
 group to_be_deleted subtract all bottom_layer bottom sphere
 group to_be_deleted union top_vacuum
 
+group lower_sphere subtract sphere top_layer
+group bottom_and_sphere union lower_sphere bottom
+
 delete_atoms group to_be_deleted
 
-fix nvt all nvt temp 300.0 300.0 1.0
-dump mydump all custom 1 dump.lammpstrj id type x y z vx vy vz
+variable indent_a equal 1
+variable indent equal $a*${indent_a}
 
+variable distance equal ${indent}+${sphere_clearance}
+variable steps_down equal 1000
+variable velocity equal -${distance}/(${steps_down}*dt)
 
-timestep 0.002
-thermo 1
-run 20
+fix motion top_layer move linear 0 0 ${velocity}
+fix nvt bottom_and_sphere nvt temp 300.0 300.0 1.0
+dump mydump all custom 10 dump.lammpstrj id type x y z vx vy vz
+
+thermo 10
+run ${steps_down}
+
+unfix motion
+fix motion top_layer move linear 0 0 0
+run 200
+
+write_restart restart.down
