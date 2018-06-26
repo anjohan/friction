@@ -20,6 +20,12 @@ variable total_height_a equal ceil(${sphere_bottom_z_a}+${sphere_radius_a}*(1-${
 
 variable total_height_with_vacuum_a equal ${total_height_a}+2
 
+variable top_of_bottom_a equal ${bottom_layer_thickness_a}+${bottom_thickness_a}
+variable top_of_bottom equal $a*${top_of_bottom_a}
+
+variable bottom_of_top_a equal ${total_height_a}-${top_thickness_a}
+variable bottom_of_top equal $a*${bottom_of_top_a}
+
 variable bottom_layer_thickness equal $a*${bottom_layer_thickness_a}
 variable bottom_thickness equal $a*${bottom_thickness_a}
 variable top_thickness equal $a*${top_thickness_a}

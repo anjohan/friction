@@ -23,9 +23,9 @@ group to_be_deleted union top_vacuum
 delete_atoms group to_be_deleted
 
 fix nvt all nvt temp 300.0 300.0 1.0
-dump mydump all custom 10 dump.lammpstrj id type x y z vx vy vz
+dump mydump all custom 1 dump.lammpstrj id type x y z vx vy vz
 
 
 timestep 0.002
 thermo 1
-run 100
+run 20
