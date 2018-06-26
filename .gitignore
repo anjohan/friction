@@ -1,3 +1,10 @@
+dump.*
+tags
+log.*
+*.in.bin
+*.restart
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

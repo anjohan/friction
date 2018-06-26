@@ -1,0 +1,31 @@
+include in.common_variables
+
+units metal
+boundary p p p
+atom_style	atomic
+
+read_data betacristobalite.data
+replicate ${Lx_a} ${Ly_a} ${total_height_with_vacuum_a}
+
+include in.potential
+
+include in.common_regions
+
+group bottom_layer region bottom_layer
+group bottom region bottom
+group top_layer region top_layer
+group sphere region sphere
+group top_vacuum region top_vacuum
+
+group to_be_deleted subtract all bottom_layer bottom sphere
+group to_be_deleted union top_vacuum
+
+delete_atoms group to_be_deleted
+
+fix nvt all nvt temp 300.0 300.0 1.0
+dump mydump all custom 10 dump.lammpstrj id type x y z vx vy vz
+
+
+timestep 0.002
+thermo 1
+run 100

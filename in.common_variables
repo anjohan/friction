@@ -1,0 +1,37 @@
+variable a equal 7.16
+variable Lx_a equal 20
+variable Ly_a equal 20
+
+variable bottom_layer_thickness_a equal 1
+variable bottom_thickness_a equal 5
+variable top_thickness_a equal 2
+
+variable theta equal 60*PI/180
+variable costheta equal cos(${theta})
+variable sintheta equal sin(${theta})
+
+variable sphere_clearance_a equal 0.2
+variable sphere_radius_a equal ${Lx_a}/(2*${sintheta})
+variable sphere_bottom_z_a equal ${bottom_layer_thickness_a}+${bottom_thickness_a}+${sphere_clearance_a}
+
+variable sphere_centre_z_a equal ${sphere_bottom_z_a}+${sphere_radius_a}
+
+variable total_height_a equal ceil(${sphere_bottom_z_a}+${sphere_radius_a}*(1-${costheta})+${top_thickness_a})
+
+variable total_height_with_vacuum_a equal ${total_height_a}+2
+
+variable bottom_layer_thickness equal $a*${bottom_layer_thickness_a}
+variable bottom_thickness equal $a*${bottom_thickness_a}
+variable top_thickness equal $a*${top_thickness_a}
+
+variable sphere_clearance equal $a*${sphere_clearance_a}
+variable sphere_radius equal $a*${sphere_radius_a}
+variable sphere_bottom_z equal $a*${sphere_bottom_z_a}
+
+variable sphere_centre_z equal $a*${sphere_centre_z_a}
+
+variable total_height equal $a*${total_height_a}
+
+variable xmid equal lx/2
+variable ymid equal ly/2
+
