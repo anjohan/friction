@@ -1,3 +1,4 @@
+log log.down
 include in.common_variables
 
 units metal
