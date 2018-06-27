@@ -1,0 +1,14 @@
+log log.pull
+
+read_restart restart.down
+
+include in.potential
+
+dump mydump all custom 10 dump.pull id type x y z vx vy vz
+
+thermo 10
+thermo_style custom step time temp press pe ke etotal spcpu cpuremain
+
+fix nvt bottom_and_sphere nvt temp 300.0 300.0 1.0
+
+run 200

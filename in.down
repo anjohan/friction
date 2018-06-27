@@ -30,21 +30,30 @@ delete_atoms group to_be_deleted
 variable indent_a equal 1
 variable indent equal $a*${indent_a}
 
-variable distance equal ${indent}+${sphere_clearance}
-variable steps_down equal 1000
-variable velocity equal -${distance}/(${steps_down}*dt)
-
-fix motion top_layer move linear 0 0 ${velocity}
 fix nvt bottom_and_sphere nvt temp 300.0 300.0 1.0
 
 dump mydump all custom 10 dump.down id type x y z vx vy vz
 
+compute normal_force top_layer reduce sum fz
+
+compute com_sphere sphere com
+
 thermo 10
-thermo_style custom step time temp press pe ke etotal spcpu cpuremain
+thermo_style custom step time temp press pe ke etotal c_normal_force c_com_sphere[3] spcpu cpuremain
+
+velocity bottom_and_sphere create 300.0 277385 mom yes loop geom
+
+variable distance equal ${indent}+${sphere_clearance}
+variable steps_down equal 1000
+variable velocity equal -${distance}/(${steps_down}*dt)
+fix motion top_layer move linear 0 0 ${velocity}
+
 run ${steps_down}
+
+velocity bottom_and_sphere create 300.0 277385 mom yes loop geom
 
 unfix motion
 fix motion top_layer move linear 0 0 0
-run 200
+run 1000
 
 write_restart restart.down
