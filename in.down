@@ -35,9 +35,11 @@ variable velocity equal -${distance}/(${steps_down}*dt)
 
 fix motion top_layer move linear 0 0 ${velocity}
 fix nvt bottom_and_sphere nvt temp 300.0 300.0 1.0
-dump mydump all custom 10 dump.lammpstrj id type x y z vx vy vz
+
+dump mydump all custom 10 dump.down id type x y z vx vy vz
 
 thermo 10
+thermo_style custom step time temp press pe ke etotal spcpu cpuremain
 run ${steps_down}
 
 unfix motion
