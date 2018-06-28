@@ -43,8 +43,8 @@ thermo_style custom step time temp press pe ke etotal c_normal_force c_com_spher
 
 velocity bottom_and_sphere create 300.0 277385 mom yes loop geom
 
-variable distance equal ${indent}+${sphere_clearance}
 variable steps_down equal 1000
+variable distance equal ${indent}+${sphere_clearance}
 variable velocity equal -${distance}/(${steps_down}*dt)
 fix motion top_layer move linear 0 0 ${velocity}
 
@@ -52,8 +52,12 @@ run ${steps_down}
 
 velocity bottom_and_sphere create 300.0 277385 mom yes loop geom
 
+fix normal_force_print all print 1 "$(c_normal_force)" file normal_force.txt screen no
+
+variable equilibrium_steps equal 1000
+
 unfix motion
 fix motion top_layer move linear 0 0 0
-run 1000
+run ${equilibrium_steps}
 
 write_restart restart.down

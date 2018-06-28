@@ -9,6 +9,8 @@ dump mydump all custom 10 dump.pull id type x y z vx vy vz
 thermo 10
 thermo_style custom step time temp press pe ke etotal spcpu cpuremain
 
-fix nvt bottom_and_sphere nvt temp 300.0 300.0 1.0
+group bottom_sphere_and_top union bottom_and_sphere top_layer
+
+fix nvt bottom_sphere_and_top nvt temp 300.0 300.0 1.0
 
 run 200
