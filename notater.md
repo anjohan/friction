@@ -1,7 +1,7 @@
 # 2018-06-28 Malthe-prat
 Mulige mål for prosjektet:
 
-1. Fullføre måling av friksjonskoeffisient som funksjon av tykkelse.
+1. Fullføre måling av friksjonskoeffisient som funksjon av tykkelse (ref. fig. 7.8 i Larsen-master).
 Sammenligne for SiO2, SiO2+passivering og SiO2+passivering+vann.
 Finne tykkelsen hvor friksjonskoeffisienten konvergerer.
 2. Måle radiell fordeling av normalkraft i alle tre tilfeller (ref. fig. 6.6 i Larsen-master).
