@@ -1,43 +1,16 @@
 variable a equal 7.16
-variable Lx_a equal 15
-variable Ly_a equal 15
 
-variable bottom_layer_thickness_a equal 1
-variable bottom_thickness_a equal 3
-variable top_thickness_a equal 2
+variable layer_thickness equal 2*$a
+variable radius equal 8*$a
+variable height equal 0.5*${radius}
 
-variable theta equal 60*PI/180
-variable costheta equal cos(${theta})
-variable sintheta equal sin(${theta})
+variable Lx equal ceil(2*${height}*sqrt(2*${radius}/${height}-1))
+variable Ly equal ${Lx}
 
-variable sphere_clearance_a equal 0.2
-variable sphere_radius_a equal ${Lx_a}/(2*${sintheta})
-variable sphere_bottom_z_a equal ${bottom_layer_thickness_a}+${bottom_thickness_a}+${sphere_clearance_a}
+variable initial_clearance equal 0.2*$a
 
-variable sphere_centre_z_a equal ${sphere_bottom_z_a}+${sphere_radius_a}
+variable top_of_bottom_sphere equal ${layer_thickness}+${height}
+variable bottom_of_top_sphere equal ${top_of_bottom_sphere}+${initial_clearance}
+variable bottom_of_top_layer equal ${bottom_of_top_sphere}+${height}
 
-variable total_height_a equal ceil(${sphere_bottom_z_a}+${sphere_radius_a}*(1-${costheta})+${top_thickness_a})
-
-variable total_height_with_vacuum_a equal ${total_height_a}+2
-
-variable top_of_bottom_a equal ${bottom_layer_thickness_a}+${bottom_thickness_a}
-variable top_of_bottom equal $a*${top_of_bottom_a}
-
-variable bottom_of_top_a equal ${total_height_a}-${top_thickness_a}
-variable bottom_of_top equal $a*${bottom_of_top_a}
-
-variable bottom_layer_thickness equal $a*${bottom_layer_thickness_a}
-variable bottom_thickness equal $a*${bottom_thickness_a}
-variable top_thickness equal $a*${top_thickness_a}
-
-variable sphere_clearance equal $a*${sphere_clearance_a}
-variable sphere_radius equal $a*${sphere_radius_a}
-variable sphere_bottom_z equal $a*${sphere_bottom_z_a}
-
-variable sphere_centre_z equal $a*${sphere_centre_z_a}
-
-variable total_height equal $a*${total_height_a}
-
-variable xmid equal lx/2
-variable ymid equal ly/2
-
+variable total_height equal 2*(${layer_thickness}+${height})+${initial_clearance}

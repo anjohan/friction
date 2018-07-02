@@ -1,0 +1,25 @@
+log log.pull
+
+read_restart restart.down
+
+include in.potential
+
+dump mydump all custom 10 dump.pull id type x y z vx vy vz
+
+
+# group sphere_caps_and_top_layer union sphere_caps top_layer
+
+fix nvt sphere_caps nvt temp 300.0 300.0 1.0
+fix rigid_top top_layer rigid/nvt single temp 300.0 300.0 1.0 force * on on off torque * off off off
+
+compute normal_force top_layer reduce sum fz
+compute com_top_sphere top_sphere com
+
+thermo 10
+thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_sphere[*] spcpu cpuremain
+
+variable normal_force_per_atom equal -${normal_force}/count(top_layer)
+
+fix force top_layer addforce 0 0 ${normal_force_per_atom}
+
+run 2000

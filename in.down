@@ -7,57 +7,80 @@ atom_style	atomic
 timestep 0.002
 
 read_data betacristobalite.data
-replicate ${Lx_a} ${Ly_a} ${total_height_with_vacuum_a}
+replicate $(round(v_Lx/v_a)) $(round(v_Ly/v_a)) $(round(v_total_height/v_a)+2)
 
 include in.potential
 
 include in.common_regions
 
 group bottom_layer region bottom_layer
-group bottom region bottom
 group top_layer region top_layer
-group sphere region sphere
+group bottom_sphere region bottom_sphere
+group top_sphere region top_sphere
 group top_vacuum region top_vacuum
 
-group to_be_deleted subtract all bottom_layer bottom sphere
+group to_be_deleted subtract all bottom_layer top_layer bottom_sphere top_sphere
 group to_be_deleted union top_vacuum
 
-group lower_sphere subtract sphere top_layer
-group bottom_and_sphere union lower_sphere bottom
+group bottom_sphere_cap subtract bottom_sphere bottom_layer
+group top_sphere_cap subtract top_sphere top_layer
+
+group sphere_caps union bottom_sphere_cap top_sphere_cap
 
 delete_atoms group to_be_deleted
 
-variable indent_a equal 1
-variable indent equal $a*${indent_a}
+variable indent equal $a*1
 
-fix nvt bottom_and_sphere nvt temp 300.0 300.0 1.0
+fix nvt sphere_caps nvt temp 300.0 300.0 1.0
 
 dump mydump all custom 10 dump.down id type x y z vx vy vz
 
 compute normal_force top_layer reduce sum fz
 
-compute com_sphere sphere com
+compute com_top_sphere top_sphere com
 
 thermo 10
-thermo_style custom step time temp press pe ke etotal c_normal_force c_com_sphere[3] spcpu cpuremain
+thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_sphere[*] spcpu cpuremain
 
-velocity bottom_and_sphere create 300.0 277385 mom yes loop geom
+velocity all create 300.0 277385 mom yes loop geom
 
 variable steps_down equal 1000
-variable distance equal ${indent}+${sphere_clearance}
-variable velocity equal -${distance}/(${steps_down}*dt)
-fix motion top_layer move linear 0 0 ${velocity}
+variable distance equal ${indent}+${initial_clearance}
+variable max_velocity equal -1.5*${distance}/(${steps_down}*dt)
 
+variable increasing_velocity equal ${max_velocity}*step/(${steps_down}/3)
+variable decreasing_velocity equal ${max_velocity}*(1-(step-2*${steps_down}/3)/(${steps_down}/3))
+
+variable zero equal 0
+
+fix motion top_layer move linear 0 0 $(-v_distance/(v_steps_down*dt))
 run ${steps_down}
 
-velocity bottom_and_sphere create 300.0 277385 mom yes loop geom
+# fix motion top_layer move variable v_zero v_zero NULL v_zero v_zero v_increasing_velocity
+#
+# run $(v_steps_down/3)
+#
+# unfix motion
+# fix motion top_layer move linear 0 0 ${max_velocity}
+#
+# run $(v_steps_down/3)
+#
+# unfix motion
+# fix motion top_layer move variable v_zero v_zero NULL v_zero v_zero v_decreasing_velocity
+#
+# run $(v_steps_down/3)
+# unfix motion
 
-fix normal_force_print all print 1 "$(c_normal_force)" file normal_force.txt screen no
+velocity sphere_caps create 300.0 277385 mom yes loop geom
+
 
 variable equilibrium_steps equal 1000
 
-unfix motion
 fix motion top_layer move linear 0 0 0
+run ${equilibrium_steps}
+
+fix normal_force_print all print 1 "$(c_normal_force)" file normal_force.txt screen no
+
 run ${equilibrium_steps}
 
 write_restart restart.down
