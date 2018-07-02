@@ -1,0 +1,63 @@
+log log.down
+include in.common_variables
+
+units metal
+boundary p p p
+atom_style	atomic
+timestep 0.002
+
+read_data betacristobalite.data
+replicate ${Lx_a} ${Ly_a} ${total_height_with_vacuum_a}
+
+include in.potential
+
+include in.common_regions
+
+group bottom_layer region bottom_layer
+group bottom region bottom
+group top_layer region top_layer
+group sphere region sphere
+group top_vacuum region top_vacuum
+
+group to_be_deleted subtract all bottom_layer bottom sphere
+group to_be_deleted union top_vacuum
+
+group lower_sphere subtract sphere top_layer
+group bottom_and_sphere union lower_sphere bottom
+
+delete_atoms group to_be_deleted
+
+variable indent_a equal 1
+variable indent equal $a*${indent_a}
+
+fix nvt bottom_and_sphere nvt temp 300.0 300.0 1.0
+
+dump mydump all custom 10 dump.down id type x y z vx vy vz
+
+compute normal_force top_layer reduce sum fz
+
+compute com_sphere sphere com
+
+thermo 10
+thermo_style custom step time temp press pe ke etotal c_normal_force c_com_sphere[3] spcpu cpuremain
+
+velocity bottom_and_sphere create 300.0 277385 mom yes loop geom
+
+variable steps_down equal 1000
+variable distance equal ${indent}+${sphere_clearance}
+variable velocity equal -${distance}/(${steps_down}*dt)
+fix motion top_layer move linear 0 0 ${velocity}
+
+run ${steps_down}
+
+velocity bottom_and_sphere create 300.0 277385 mom yes loop geom
+
+fix normal_force_print all print 1 "$(c_normal_force)" file normal_force.txt screen no
+
+variable equilibrium_steps equal 1000
+
+unfix motion
+fix motion top_layer move linear 0 0 0
+run ${equilibrium_steps}
+
+write_restart restart.down
