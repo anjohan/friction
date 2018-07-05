@@ -8,7 +8,7 @@ else
 	threads = -np 32
 endif
 
-.PRECIOUS: log.* dump.*
+.PRECIOUS: log.% dump.%
 
 all: log.pull
 log.pull: in.pull average_normal_force.txt in.potential
