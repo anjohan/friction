@@ -7,14 +7,11 @@ include in.potential
 dump mydump all custom 100 dump.pull id type x y z vx vy vz
 
 velocity all create 300.0 277385 mom yes rot yes loop geom
-velocity top_layer set 0 0 0
 
 # group sphere_caps_and_top_layer union sphere_caps top_layer
 
 fix nvt sphere_caps nvt temp 300.0 300.0 1.0
-fix nvt_top top_layer nvt temp 300.0 300.0 1.0
-fix top_force top_layer setforce NULL NULL 0
-#fix rigid_top top_layer rigid/nvt single temp 300.0 300.0 1.0 force * on on on torque * off off off
+fix rigid_top top_layer rigid/nvt single temp 300.0 300.0 1.0 force * on on on torque * off off off
 
 compute normal_force top_layer reduce sum fz
 compute com_top_sphere top_sphere com
@@ -24,14 +21,14 @@ thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_s
 
 variable normal_force_per_atom equal -${normal_force}/count(top_layer)
 
-#fix force top_layer addforce 0 0 ${normal_force_per_atom}
+fix force top_layer addforce 0 0 ${normal_force_per_atom}
 
-run 1000
+run 10000
 
+quit
 
-unfix top_force
-fix top_force top_layer setforce $(-0.05*v_normal_force_per_atom) NULL 0
-#fix force top_layer addforce $(-0.05*v_normal_force_per_atom) 0 ${normal_force_per_atom}
+unfix force
+fix force top_layer addforce $(-0.05*v_normal_force_per_atom) 0 ${normal_force_per_atom}
 
 label loopstart
 run 1000
