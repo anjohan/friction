@@ -11,7 +11,7 @@ velocity all create 300.0 277385 mom yes rot yes loop geom
 # group sphere_caps_and_top_layer union sphere_caps top_layer
 
 fix nvt sphere_caps nvt temp 300.0 300.0 1.0
-fix rigid_top top_layer rigid/nvt single temp 300.0 300.0 1.0 force * on on off torque * off off off
+fix rigid_top top_layer rigid/nvt single temp 300.0 300.0 1.0 force * on on on torque * off off off
 
 compute normal_force top_layer reduce sum fz
 compute com_top_sphere top_sphere com
