@@ -26,12 +26,12 @@ variable normal_force_per_atom equal -${normal_force}/count(top_layer)
 
 #fix force top_layer addforce 0 0 ${normal_force_per_atom}
 
-run 10000
+run 1000
 
-quit
 
-unfix force
-fix force top_layer addforce $(-0.05*v_normal_force_per_atom) 0 ${normal_force_per_atom}
+unfix force_top
+fix top_force top_layer setforce $(-0.05*v_normal_force_per_atom) NULL 0
+#fix force top_layer addforce $(-0.05*v_normal_force_per_atom) 0 ${normal_force_per_atom}
 
 label loopstart
 run 1000
