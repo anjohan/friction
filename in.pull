@@ -26,7 +26,7 @@ variable normal_force_per_atom equal -${normal_force}/count(top_layer)
 #fix force top_layer addforce 0 0 ${normal_force_per_atom}
 
 run 10000
-quit
+#quit
 
 #unfix force
 fix force top_layer addforce $(-0.05*v_normal_force_per_atom) 0 0
