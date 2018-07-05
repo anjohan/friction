@@ -32,6 +32,6 @@ quit
 fix force top_layer addforce $(-0.05*v_normal_force_per_atom) 0 0
 
 label loopstart
-run 1000
+run 10000
 print $(c_com_top_sphere[1]/lx-0.5)
-if "$(c_com_top_sphere[1]/lx-0.5) <= 0.1" then "jump SELF loopstart"
+#if "$(c_com_top_sphere[1]/lx-0.5) <= 0.1" then "jump SELF loopstart"
