@@ -13,7 +13,7 @@ velocity top_layer set 0 0 0
 
 fix nvt sphere_caps nvt temp 300.0 300.0 1.0
 fix nvt_top top_layer nvt temp 300.0 300.0 1.0
-fix top_force top_layer setforce 0 0 0
+fix top_force top_layer setforce NULL NULL 0
 #fix rigid_top top_layer rigid/nvt single temp 300.0 300.0 1.0 force * on on on torque * off off off
 
 compute normal_force top_layer reduce sum fz
