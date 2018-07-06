@@ -1,4 +1,4 @@
-log log.pull
+#log log.pull
 #variable normal_force equal 28.552
 
 read_restart restart.down
