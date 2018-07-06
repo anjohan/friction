@@ -33,7 +33,7 @@ variable indent equal $a*1
 
 fix nvt sphere_caps nvt temp 300.0 300.0 1.0
 
-dump mydump all custom 10 dump.down id type x y z vx vy vz
+dump mydump all custom 100 dump.down id type x y z vx vy vz
 
 compute normal_force top_layer reduce sum fz
 
