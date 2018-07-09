@@ -5,7 +5,7 @@ host=$(shell hostname)
 ifeq (${host},hp)
 	lmpcmd = mpirun lmp
 else ifeq (${host},bigfacet)
-	lmpcmd = mpirun -n 1 /lammps/lammps_kokkos2/src/lmp_kokkos_cuda_mpi -k on g 1 -sf kk -pk kokkos newton on neigh half binsize 9.35
+	lmpcmd = mpirun -n 4 /lammps/lammps_kokkos2/src/lmp_kokkos_cuda_mpi -k on g 4 -sf kk -pk kokkos newton on neigh half binsize 7.5
 else
 	lmpcmd = mpirun -np 32 lmp
 endif
@@ -19,3 +19,6 @@ average_normal_force.txt: normal_force.txt find_normal_force.py
 	python find_normal_force.py
 normal_force.txt: in.down in.common_regions in.common_variables in.potential
 	$(lmpcmd) -in in.down
+
+clean:
+	rm -rf *.txt dump.* log.*
