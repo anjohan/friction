@@ -29,22 +29,22 @@ group sphere_caps union bottom_sphere_cap top_sphere_cap
 
 delete_atoms group to_be_deleted
 
-variable indent equal $a*1
+variable indent equal $a*1.0
 
 fix nvt sphere_caps nvt temp 300.0 300.0 1.0
 
-dump mydump all custom 100 dump.down id type x y z vx vy vz
+dump mydump all custom 1000 dump.down.bin id type x y z vx vy vz
 
 compute normal_force top_layer reduce sum fz
 
 compute com_top_sphere top_sphere com
 
-thermo 10
+thermo 100
 thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_sphere[*] spcpu cpuremain
 
 velocity all create 300.0 277385 mom yes loop geom
 
-variable steps_down equal 1000
+variable steps_down equal 10000
 variable distance equal ${indent}+${initial_clearance}
 variable max_velocity equal -1.5*${distance}/(${steps_down}*dt)
 
@@ -74,7 +74,7 @@ run ${steps_down}
 velocity sphere_caps create 300.0 277385 mom yes loop geom
 
 
-variable equilibrium_steps equal 1000
+variable equilibrium_steps equal 20000
 
 fix motion top_layer move linear 0 0 0
 run ${equilibrium_steps}

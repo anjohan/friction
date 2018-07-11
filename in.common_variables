@@ -1,8 +1,8 @@
 variable a equal 7.16
 
 variable layer_thickness equal 2*$a
-variable radius equal 8*$a
-variable height equal 0.5*${radius}
+variable radius equal 12*$a
+variable height equal 0.75*${radius}
 
 variable Lx equal ceil(2*${height}*sqrt(2*${radius}/${height}-1))
 variable Ly equal ${Lx}
