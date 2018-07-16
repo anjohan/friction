@@ -6,6 +6,8 @@ ifeq (${host},hp)
 	lmpcmd = mpirun lmp
 else ifeq (${host},bigfacet)
 	lmpcmd = mpirun -n 1 /lammps/lammps_kokkos2/src/lmp_kokkos_cuda_mpi -k on g 1 -sf kk -pk kokkos newton on neigh half binsize 7.5
+else ifeq ($(shell hostname | grep -o smaug),smaug)
+	lmpcmd = mpirun ~/lammps/build/lmp
 else
 	lmpcmd = mpirun -np 32 lmp
 endif
