@@ -19,8 +19,10 @@ log.pull: in.pull average_normal_force.txt in.potential
 	$(lmpcmd) -var normal_force $$(cat average_normal_force.txt) -in in.pull
 average_normal_force.txt: normal_force.txt find_normal_force.py
 	python find_normal_force.py
-normal_force.txt: in.down in.common_regions in.common_variables in.potential
+normal_force.txt: in.down in.common_regions restart.amorphous
 	$(lmpcmd) -in in.down
+restart.amorphous: in.make_amorphous in.common_variables in.potential
+	$(lmpcmd) -in in.make_amorphous
 
 clean:
 	rm -rf *.txt dump.* log.* slurm*

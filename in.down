@@ -1,15 +1,7 @@
 log log.down
 include in.common_variables
-
-units metal
-boundary p p p
-atom_style	atomic
-timestep 0.002
-
-read_data betacristobalite.data
-replicate $(round(v_Lx/v_a)) $(round(v_Ly/v_a)) $(round(v_total_height/v_a)+2)
-
 include in.potential
+read_restart restart.amorphous
 
 include in.common_regions
 
@@ -76,7 +68,8 @@ velocity sphere_caps create 300.0 277385 mom yes loop geom
 
 variable equilibrium_steps equal 20000
 
-fix motion top_layer move linear 0 0 0
+unfix motion
+#fix motion top_layer move linear 0 0 0
 run ${equilibrium_steps}
 
 fix normal_force_print all print 1 "$(c_normal_force)" file normal_force.txt screen no

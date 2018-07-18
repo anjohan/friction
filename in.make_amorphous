@@ -1,0 +1,59 @@
+include in.common_variables
+variable start_temperature equal 300.0
+variable highest_temperature equal 4000
+variable heating_time equal 30
+variable heating_steps equal ${heating_time}/dt
+variable thermalising_time equal 20
+variable thermalising_steps equal ${thermalising_time}/dt
+variable cooling_time equal 120
+variable cooling_steps equal ${cooling_time}/dt
+variable thermalising_time_final equal 50
+variable thermalising_steps_final equal ${thermalising_time_final}/dt
+variable total_time equal ${heating_time}+${thermalising_time}+${cooling_time}+${thermalising_time_final}
+variable total_steps equal ${total_time}/dt
+variable total_dumps equal 100
+variable dump_frequency equal v_total_steps/${total_dumps}
+
+log log.amorphous
+#/atom 1 silicon
+#/atom 2 oxygen
+#/atom 3 hydrogen
+#/bond 1 2 2.6
+#/bond 2 3 1.4
+
+#package gpu 2
+#suffix gpu
+
+units metal
+boundary p p p
+atom_style molecular
+
+read_data betacristobalite.data
+replicate $(round(v_Lx/v_a)) $(round(v_Ly/v_a)) $(round(v_total_height/v_a)+2)
+
+pair_style vashishta
+pair_coeff	* * SiO2.vashishta Si O
+mass            1 28.08
+mass            2 15.9994
+timestep 0.002
+
+thermo 100
+thermo_style custom step time temp press pzz etotal spcpu cpuremain
+dump lagring all custom ${dump_frequency} amorphous.in.bin id type x y z
+
+velocity all create ${start_temperature} 277385 mom yes loop geom
+
+fix thermostat all nvt temp ${start_temperature} ${highest_temperature} 1.0
+run ${heating_steps}
+
+fix thermostat all nvt temp ${highest_temperature} ${highest_temperature} 1.0
+run ${thermalising_steps}
+
+fix thermostat all nvt temp ${highest_temperature} ${T} 1.0
+run ${cooling_steps}
+
+fix thermostat all nvt temp ${T} ${T} 1.0
+run ${thermalising_steps_final}
+
+write_data amorphous.data
+write_restart restart.amorphous
