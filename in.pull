@@ -26,7 +26,7 @@ thermo 100
 thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_sphere[*] spcpu cpuremain
 
 variable normal_force_per_atom atom -${normal_force}*mass/mass(top_layer)
-variable pull_force_per_atom atom -0.5*v_normal_force_per_atom
+variable pull_force_per_atom atom -0.2*v_normal_force_per_atom
 
 #fix force top_layer addforce 0 0 ${normal_force_per_atom}
 
