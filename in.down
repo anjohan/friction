@@ -1,7 +1,7 @@
 log log.down
 include in.common_variables
-include in.potential
 read_restart restart.amorphous
+include in.potential
 
 include in.common_regions
 
