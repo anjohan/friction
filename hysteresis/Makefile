@@ -14,9 +14,11 @@ endif
 
 .PRECIOUS: log.% dump.%
 
-all: log.hysteresis
-log.hysteresis: in.hysteresis in.common_regions restart.amorphous
+all: dump.hysteresis.bin
+dump.hysteresis.bin: in.hysteresis restart.system
 	$(lmpcmd) -in in.hysteresis
+restart.system: in.make_system in.common_variables in.common_regions restart.amorphous
+	$(lmpcmd) -in in.make_system
 restart.amorphous: in.make_amorphous in.common_variables in.potential
 	$(lmpcmd) -in in.make_amorphous
 

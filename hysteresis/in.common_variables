@@ -9,7 +9,7 @@ variable sphere_spacing equal 2
 variable Lx equal ceil(2*${height}*sqrt(2*${radius}/${height}-1))
 variable Ly equal ${Lx}
 
-variable initial_clearance equal $a
+variable initial_clearance equal 2*$a
 
 variable top_of_bottom_sphere equal ${layer_thickness}+${height}
 variable bottom_of_top_sphere equal ${top_of_bottom_sphere}+${initial_clearance}

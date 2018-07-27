@@ -1,23 +1,7 @@
 log log.hysteresis
 include in.common_variables
-read_restart restart.amorphous
+read_restart restart.system
 include in.potential
-
-include in.common_regions
-
-group bottom_layer region bottom_layer
-group top_layer region top_layer
-group bottom_sphere region bottom_sphere
-group top_sphere region top_sphere
-group top_vacuum region top_vacuum
-
-group to_be_deleted subtract all bottom_layer top_layer bottom_sphere top_sphere
-group to_be_deleted union top_vacuum
-
-group bottom_sphere_cap subtract bottom_sphere bottom_layer
-group top_sphere_cap subtract top_sphere top_layer
-
-group sphere_caps union bottom_sphere_cap top_sphere_cap
 
 delete_atoms group to_be_deleted
 
@@ -36,7 +20,7 @@ thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_s
 
 velocity all create 300.0 277385 mom yes loop geom
 
-variable steps_down equal 40000
+variable steps_down equal 80000
 variable distance equal ${indent}+${initial_clearance}
 variable max_velocity equal -1.5*${distance}/(${steps_down}*dt)
 
