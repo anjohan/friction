@@ -39,7 +39,7 @@ timestep 0.002
 
 thermo 100
 thermo_style custom step time temp press pzz etotal spcpu cpuremain
-dump lagring all custom ${dump_frequency} amorphous.in.bin id type x y z
+dump lagring all custom ${dump_frequency} dump.amorphous.bin id type x y z
 
 velocity all create ${start_temperature} 277385 mom yes loop geom
 
