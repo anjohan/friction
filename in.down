@@ -36,7 +36,7 @@ thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_s
 
 velocity all create 300.0 277385 mom yes loop geom
 
-variable steps_down equal 10000
+variable steps_down equal 40000
 variable distance equal ${indent}+${initial_clearance}
 variable max_velocity equal -1.5*${distance}/(${steps_down}*dt)
 
@@ -75,5 +75,8 @@ run ${equilibrium_steps}
 fix normal_force_print all print 1 "$(c_normal_force)" file normal_force.txt screen no
 
 run ${equilibrium_steps}
+
+unfix normal_force_print
+unfix nvt
 
 write_restart restart.down

@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --partition=normal
-#SBATCH --ntasks=1
-#SBATCH --gres=gpu:1
+#SBATCH --ntasks=4
+#SBATCH --gres=gpu:4
 #SBATCH --job-name=aj
 echo $CUDA_VISIBLE_DEVICES
-make
+make GPUS=4
