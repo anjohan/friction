@@ -23,4 +23,4 @@ restart.amorphous: in.make_amorphous in.common_variables in.potential
 	$(lmpcmd) -in in.make_amorphous
 
 clean:
-	rm -rf *.txt dump.* log.* slurm*
+	rm -rf dump.* log.* slurm* restart.* system.data

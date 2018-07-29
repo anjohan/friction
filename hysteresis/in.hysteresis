@@ -1,22 +1,21 @@
-log log.hysteresis
-include in.common_variables
-read_restart restart.system
-include in.potential
+log ${OUTDIR}/log.hysteresis
+include ${INDIR}/in.common_variables
+read_restart ${OUTDIR}/restart.system
+include ${INDIR}/in.potential
 
 delete_atoms group to_be_deleted
 
 variable indent equal $a*1.0
 
-fix nvt sphere_caps nvt temp 300.0 300.0 1.0
+fix nvt moving nvt temp 300.0 300.0 1.0
 
-dump mydump all custom 1000 dump.hysteresis.bin id type x y z vx vy vz
+dump mydump all custom 1000 ${OUTDIR}/dump.hysteresis.bin id type x y z vx vy vz
 
-compute normal_force top_layer reduce sum fz
-
-compute com_top_sphere top_sphere com
+variable normal_force equal fcm(top_layer,z)
+variable z_sphere equal xcm(sphere,z)
 
 thermo 100
-thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_sphere[*] spcpu cpuremain
+thermo_style custom step time temp press pe ke etotal v_normal_force v_z_sphere spcpu cpuremain
 
 velocity all create 300.0 277385 mom yes loop geom
 
@@ -29,12 +28,12 @@ variable decreasing_velocity equal ${max_velocity}*(1-(step-2*${steps_down}/3)/(
 
 variable zero equal 0
 
-fix normal_force_print all print 1 "$(c_normal_force)" file normal_force_down.txt screen no
+fix normal_force_print all print 1 "$(v_normal_force)" file ${OUTDIR}/normal_force_down.txt screen no
 
 fix motion top_layer move linear 0 0 $(-v_distance/(v_steps_down*dt))
 run ${steps_down}
 
-velocity sphere_caps create 300.0 277385 mom yes loop geom
+velocity moving create 300.0 277385 mom yes loop geom
 
 variable equilibrium_steps equal 20000
 
@@ -42,7 +41,7 @@ unfix motion
 
 run $(v_equilibrium_steps/2)
 
-fix normal_force_print all print 1 "$(c_normal_force)" file normal_force_up.txt screen no
+fix normal_force_print all print 1 "$(v_normal_force)" file ${OUTDIR}/normal_force_up.txt screen no
 
 run $(v_equilibrium_steps/2)
 

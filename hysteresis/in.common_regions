@@ -1,7 +1,7 @@
 region bottom_layer block INF INF INF INF INF ${layer_thickness}
-region bottom_sphere sphere $(lx/2) $(ly/2) $(v_top_of_bottom_sphere-v_radius) ${radius}
+region bottom_moving_layer block INF INF INF INF ${layer_thickness} ${top_of_bottom}
 
-region top_sphere sphere $(lx/2) $(ly/2) $(v_bottom_of_top_sphere+v_radius) ${radius}
-region top_layer block INF INF INF INF ${bottom_of_top_layer} $(v_bottom_of_top_layer+v_layer_thickness)
+region sphere sphere $(lx/2) $(ly/2) $(v_bottom_of_top_sphere+v_radius) ${radius}
+region top_layer block INF INF INF INF ${bottom_of_top_layer} ${total_height}
 
-region top_vacuum block INF INF INF INF $(v_bottom_of_top_layer+v_layer_thickness) INF
+region top_vacuum block INF INF INF INF ${total_height} INF

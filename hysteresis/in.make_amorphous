@@ -1,4 +1,4 @@
-include in.common_variables
+include ${INDIR}/in.common_variables
 variable start_temperature equal 300.0
 variable highest_temperature equal 4000
 variable heating_time equal 30
@@ -14,7 +14,7 @@ variable total_steps equal ${total_time}/dt
 variable total_dumps equal 100
 variable dump_frequency equal v_total_steps/${total_dumps}
 
-log log.amorphous
+log ${OUTDIR}/log.amorphous
 #/atom 1 silicon
 #/atom 2 oxygen
 #/atom 3 hydrogen
@@ -28,18 +28,15 @@ units metal
 boundary p p p
 atom_style atomic
 
-read_data betacristobalite.data
+read_data ${INDIR}/betacristobalite.data
 replicate $(round(v_Lx/v_a)+v_sphere_spacing) $(round(v_Ly/v_a)+v_sphere_spacing) $(round(v_total_height/v_a)+2)
 
-pair_style vashishta
-pair_coeff	* * SiO2.vashishta Si O
-mass            1 28.08
-mass            2 15.9994
+include ${INDIR}/in.potential
 timestep 0.002
 
 thermo 100
 thermo_style custom step time temp press pzz etotal spcpu cpuremain
-dump lagring all custom ${dump_frequency} dump.amorphous.bin id type x y z
+dump lagring all custom ${dump_frequency} ${OUTDIR}/dump.amorphous.bin id type x y z
 
 velocity all create ${start_temperature} 277385 mom yes loop geom
 
@@ -55,5 +52,5 @@ run ${cooling_steps}
 fix thermostat all nvt temp 300.0 300.0 1.0
 run ${thermalising_steps_final}
 
-write_data amorphous.data
-write_restart restart.amorphous
+write_data ${OUTDIR}/amorphous.data
+write_restart ${OUTDIR}/restart.amorphous
