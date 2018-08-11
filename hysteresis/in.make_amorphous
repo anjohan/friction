@@ -28,7 +28,7 @@ units metal
 boundary p p p
 atom_style atomic
 
-read_data ${INDIR}/betacristobalite.data
+read_data ${INDIR}/data.betacristobalite
 replicate $(round(v_Lx/v_a)+v_sphere_spacing) $(round(v_Ly/v_a)+v_sphere_spacing) $(round(v_total_height/v_a)+2)
 
 include ${INDIR}/in.potential
@@ -52,5 +52,5 @@ run ${cooling_steps}
 fix thermostat all nvt temp 300.0 300.0 1.0
 run ${thermalising_steps_final}
 
-write_data ${OUTDIR}/amorphous.data
+write_data ${OUTDIR}/data.amorphous
 write_restart ${OUTDIR}/restart.amorphous

@@ -1,9 +1,7 @@
 log ${OUTDIR}/log.hysteresis
 include ${INDIR}/in.common_variables
 read_restart ${OUTDIR}/restart.system
-include ${INDIR}/in.potential
-
-delete_atoms group to_be_deleted
+include ${INDIR}/in.potential_${SUFFIX}
 
 variable indent equal $a*1.0
 
@@ -21,12 +19,6 @@ velocity all create 300.0 277385 mom yes loop geom
 
 variable steps_down equal 80000
 variable distance equal ${indent}+${initial_clearance}
-variable max_velocity equal -1.5*${distance}/(${steps_down}*dt)
-
-variable increasing_velocity equal ${max_velocity}*step/(${steps_down}/3)
-variable decreasing_velocity equal ${max_velocity}*(1-(step-2*${steps_down}/3)/(${steps_down}/3))
-
-variable zero equal 0
 
 fix normal_force_print all print 1 "$(v_normal_force)" file ${OUTDIR}/normal_force_down.txt screen no
 
@@ -35,7 +27,7 @@ run ${steps_down}
 
 velocity moving create 300.0 277385 mom yes loop geom
 
-variable equilibrium_steps equal 20000
+variable equilibrium_steps equal 40000
 
 unfix motion
 

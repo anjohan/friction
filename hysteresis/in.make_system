@@ -22,4 +22,4 @@ delete_atoms group to_be_deleted
 group moving union sphere_cap bottom_moving_layer
 
 write_restart ${OUTDIR}/restart.system
-write_data ${OUTDIR}/system.data
+write_data ${OUTDIR}/data.system
