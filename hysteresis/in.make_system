@@ -1,8 +1,8 @@
 log ${OUTDIR}/log.system
 
 include ${INDIR}/in.common_variables
-read_restart ${OUTDIR}/restart.amorphous
-include ${INDIR}/in.potential
+read_data ${OUTDIR}/data.amorphous_${SUFFIX}
+include ${OUTDIR}/in.potential_${SUFFIX}
 
 include ${INDIR}/in.common_regions
 
@@ -21,5 +21,5 @@ delete_atoms group to_be_deleted
 
 group moving union sphere_cap bottom_moving_layer
 
-write_restart ${OUTDIR}/restart.system
-write_data ${OUTDIR}/data.system
+write_restart ${OUTDIR}/restart.system_${SUFFIX}
+write_data ${OUTDIR}/data.system_${SUFFIX}

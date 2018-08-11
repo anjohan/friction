@@ -1,13 +1,15 @@
-log ${OUTDIR}/log.hysteresis
+log ${OUTDIR}/log.hysteresis_${SUFFIX}
 include ${INDIR}/in.common_variables
-read_restart ${OUTDIR}/restart.system
-include ${INDIR}/in.potential_${SUFFIX}
+read_restart ${OUTDIR}/restart.system_${SUFFIX}
+include ${OUTDIR}/in.potential_${SUFFIX}
 
 variable indent equal $a*1.0
+variable steps_down equal 8000
+variable equilibrium_steps equal 4000
 
 fix nvt moving nvt temp 300.0 300.0 1.0
 
-dump mydump all custom 1000 ${OUTDIR}/dump.hysteresis.bin id type x y z vx vy vz
+dump mydump all custom 1000 ${OUTDIR}/dump.hysteresis_${SUFFIX}.bin id type x y z vx vy vz
 
 variable normal_force equal fcm(top_layer,z)
 variable z_sphere equal xcm(sphere,z)
@@ -17,23 +19,21 @@ thermo_style custom step time temp press pe ke etotal v_normal_force v_z_sphere 
 
 velocity all create 300.0 277385 mom yes loop geom
 
-variable steps_down equal 80000
 variable distance equal ${indent}+${initial_clearance}
 
-fix normal_force_print all print 1 "$(v_normal_force)" file ${OUTDIR}/normal_force_down.txt screen no
+fix normal_force_print all print 1 "$(v_normal_force)" file ${OUTDIR}/normal_force_down_${SUFFIX}.txt screen no
 
 fix motion top_layer move linear 0 0 $(-v_distance/(v_steps_down*dt))
 run ${steps_down}
 
 velocity moving create 300.0 277385 mom yes loop geom
 
-variable equilibrium_steps equal 40000
 
 unfix motion
 
 run $(v_equilibrium_steps/2)
 
-fix normal_force_print all print 1 "$(v_normal_force)" file ${OUTDIR}/normal_force_up.txt screen no
+fix normal_force_print all print 1 "$(v_normal_force)" file ${OUTDIR}/normal_force_up_${SUFFIX}.txt screen no
 
 run $(v_equilibrium_steps/2)
 
