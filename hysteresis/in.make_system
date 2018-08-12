@@ -23,3 +23,5 @@ group moving union sphere_cap bottom_moving_layer
 
 write_restart ${OUTDIR}/restart.system_${SUFFIX}
 write_data ${OUTDIR}/data.system_${SUFFIX}
+
+print "$(count(all))" file ${OUTDIR}/num_atoms
