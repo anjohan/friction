@@ -2,15 +2,16 @@ variable a equal 7.16
 
 variable layer_thickness equal 2*$a
 variable moving_layer_thickness equal 4*$a
-variable radius equal 12*$a
-variable height equal 0.75*${radius}
+variable radius equal 10*$a
+variable height equal 0.5*${radius}
 
-variable sphere_spacing equal 2
+variable sphere_spacing equal 1
+variable indent equal $a*1.0
 
 variable Lx equal ceil(2*${height}*sqrt(2*${radius}/${height}-1))
 variable Ly equal ${Lx}
 
-variable initial_clearance equal 2*$a
+variable initial_clearance equal 1*$a
 
 variable top_of_bottom equal ${layer_thickness}+${moving_layer_thickness}
 variable bottom_of_top_sphere equal ${top_of_bottom}+${initial_clearance}
