@@ -1,0 +1,4 @@
+pair_style  usc
+pair_coeff  * * ${INDIR}/SiO2H2O.vashishta Si O H
+pair_modify coord 2 1 2.0 0.3
+pair_modify coord 2 3 1.4 0.3

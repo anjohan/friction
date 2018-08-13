@@ -1,0 +1,23 @@
+read_restart ${OUTDIR}/restart.system_${SUFFIX}
+
+include ${INDIR}/in.common_variables
+
+variable vacuum_volume equal ${height}*$(lx)*$(ly)-$(PI)*(${height}^2)/3*(3*${radius}-${height})
+
+variable number_density equal 0.0335 # Angstrom^(-3)
+
+print """
+tolerance 2.0
+
+filetype xyz
+output ${OUTDIR}/xyz.water
+
+
+nloop 10000
+
+structure ${INDIR}/water.xyz
+    number $(round(v_vacuum_volume*v_number_density))
+    outside sphere $(lx/2) $(ly/2) $(v_bottom_of_top_sphere+v_radius) $(v_radius+3)
+    inside box $(0+3) $(0+3) $(v_top_of_bottom+3) $(lx-3) $(ly-3) $(v_bottom_of_top_layer-3)
+end structure
+""" file ${OUTDIR}/add_water.inp

@@ -1,0 +1,17 @@
+log ${OUTDIR}/log.add_water
+read_restart ${OUTDIR}/restart.system_${SUFFIX}
+
+include ${OUTDIR}/in.potential_${SUFFIX}
+
+thermo 1
+thermo_style custom step time temp press pzz etotal cpuremain
+
+group SiO2 union all
+
+read_dump ${OUTDIR}/dump.water 0 x y z replace no box no add yes
+
+group water subtract all SiO2
+group moving union water
+
+write_restart ${OUTDIR}/restart.system_water
+write_dump all xyz ${OUTDIR}/xyz.system_water

@@ -4,19 +4,20 @@ read_restart ${OUTDIR}/restart.system_${SUFFIX}
 timestep ${TIMESTEP}
 include ${OUTDIR}/in.potential_${SUFFIX}
 
-variable steps_down equal 8000
-variable equilibrium_steps equal 4000
+variable steps_down equal 400
+variable equilibrium_steps equal 400
 variable normal_force equal fcm(top_layer,z)
 variable z_sphere equal xcm(sphere,z)
 
 #minimize 1e-6 1e-6 1000 1000
 
-dump mydump all custom 1000 ${OUTDIR}/dump.hysteresis_${SUFFIX}.bin id type x y z vx vy vz fx fy fz
+dump mydump all custom 10 ${OUTDIR}/dump.hysteresis_${SUFFIX}.bin id type x y z vx vy vz fx fy fz
 
 thermo 100
 thermo_style custom step time temp press pe ke etotal v_normal_force v_z_sphere spcpu cpuremain
 
 velocity all create 300.0 277385 mom yes loop geom
+velocity top_layer set 0 0 0
 
 variable distance equal ${indent}+${initial_clearance}
 

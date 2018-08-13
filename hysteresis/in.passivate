@@ -1,0 +1,20 @@
+log ${OUTDIR}/log.passivate
+read_restart ${OUTDIR}/restart.system_${SUFFIX}
+
+include ${OUTDIR}/in.potential_${SUFFIX}
+
+thermo 1
+thermo_style custom step time temp press pzz etotal cpuremain
+
+group SiO2 union all
+
+
+fix passivate all passivate
+run 1
+unfix passivate
+
+group OHgroups subtract all SiO2
+group moving union OHgroups
+
+write_restart ${OUTDIR}/restart.system_passivated
+write_dump all xyz ${OUTDIR}/xyz.system_passivated

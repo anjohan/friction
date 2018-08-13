@@ -21,6 +21,8 @@ delete_atoms group to_be_deleted
 
 group moving union sphere_cap bottom_moving_layer
 
+reset_ids
+
 write_restart ${OUTDIR}/restart.system_${SUFFIX}
 write_data ${OUTDIR}/data.system_${SUFFIX}
 

@@ -40,17 +40,17 @@ dump lagring all custom ${dump_frequency} ${OUTDIR}/dump.amorphous.bin id type x
 
 velocity all create ${start_temperature} 277385 mom yes loop geom
 
-fix thermostat all nvt temp ${start_temperature} ${highest_temperature} 1.0
-run ${heating_steps}
-
-fix thermostat all nvt temp ${highest_temperature} ${highest_temperature} 1.0
-run ${thermalising_steps}
-
-fix thermostat all nvt temp ${highest_temperature} 300.0 1.0
-run ${cooling_steps}
-
-fix thermostat all nvt temp 300.0 300.0 1.0
-run ${thermalising_steps_final}
+# fix thermostat all nvt temp ${start_temperature} ${highest_temperature} 1.0
+# run ${heating_steps}
+#
+# fix thermostat all nvt temp ${highest_temperature} ${highest_temperature} 1.0
+# run ${thermalising_steps}
+#
+# fix thermostat all nvt temp ${highest_temperature} 300.0 1.0
+# run ${cooling_steps}
+#
+# fix thermostat all nvt temp 300.0 300.0 1.0
+# run ${thermalising_steps_final}
 
 write_data ${OUTDIR}/data.amorphous
 write_restart ${OUTDIR}/restart.amorphous
