@@ -1,5 +1,6 @@
 log ${OUTDIR}/log.system
 
+units metal
 include ${INDIR}/in.common_variables
 read_data ${OUTDIR}/data.amorphous_${SUFFIX}
 include ${OUTDIR}/in.potential_${SUFFIX}

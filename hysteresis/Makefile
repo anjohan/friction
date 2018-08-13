@@ -10,7 +10,7 @@ lmpcmd_one = mpirun -n 1 lmp_intel_cpu_intelmpi -var INDIR $(indir) -var OUTDIR 
 
 
 .SECONDARY:
-all: $(outdir)/dump.hysteresis_water.bin
+all: $(outdir)/dump.hysteresis_water.bin $(outdir)/dump.hysteresis_passivated.bin
 
 $(outdir)/dump.hysteresis_%.bin: $(indir)/in.hysteresis $(outdir)/restart.system_% $(outdir)/in.potential_%
 	$(lmpcmd) -var TIMESTEP $(if $(findstring SiO2,$*),0.002,0.0005) -var SUFFIX $* -in $<

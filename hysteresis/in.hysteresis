@@ -25,13 +25,13 @@ fix nvt moving nvt temp 300.0 300.0 1.0
 
 fix normal_force_print all print 10 "$(v_normal_force)" file ${OUTDIR}/normal_force_down_${SUFFIX}.txt screen no
 
-#fix motion top_layer move linear 0 0 $(-v_distance/(v_steps_down*dt))
+fix motion top_layer move linear 0 0 $(-v_distance/(v_steps_down*dt))
 
 run ${steps_down}
 
 velocity moving create 300.0 277385 mom yes loop geom
 
-#unfix motion
+unfix motion
 
 run $(v_equilibrium_steps/2)
 
@@ -39,8 +39,9 @@ fix normal_force_print all print 10 "$(v_normal_force)" file ${OUTDIR}/normal_fo
 
 run $(v_equilibrium_steps/2)
 
-#fix motion top_layer move linear 0 0 $(v_distance/(v_steps_down*dt))
+fix motion top_layer move linear 0 0 $(v_distance/(v_steps_down*dt))
 run ${steps_down}
 
 unfix normal_force_print
 unfix nvt
+unfix motion
