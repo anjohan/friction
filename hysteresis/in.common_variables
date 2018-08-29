@@ -2,7 +2,7 @@ variable a equal 7.16
 
 variable layer_thickness equal 2*$a
 variable moving_layer_thickness equal 4*$a
-variable radius equal 10*$a
+variable radius equal 20*$a
 variable height equal 0.5*${radius}
 
 variable sphere_spacing equal 1

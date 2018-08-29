@@ -4,14 +4,16 @@ read_restart ${OUTDIR}/restart.system_${SUFFIX}
 timestep ${TIMESTEP}
 include ${OUTDIR}/in.potential_${SUFFIX}
 
-variable steps_down equal 400
-variable equilibrium_steps equal 400
+variable time_down equal 50
+variable equilibrium_time equal 50
+variable steps_down equal round(${time_down}/dt)
+variable equilibrium_steps equal round(${equilibrium_time}/dt)
 variable normal_force equal fcm(top_layer,z)
 variable z_sphere equal xcm(sphere,z)
 
 #minimize 1e-6 1e-6 1000 1000
 
-dump mydump all custom 10 ${OUTDIR}/dump.hysteresis_${SUFFIX}.bin id type x y z vx vy vz fx fy fz
+dump mydump all custom 1000 ${OUTDIR}/dump.hysteresis_${SUFFIX}.bin id type x y z vx vy vz fx fy fz
 
 thermo 100
 thermo_style custom step time temp press pe ke etotal v_normal_force v_z_sphere spcpu cpuremain
@@ -23,7 +25,11 @@ variable distance equal ${indent}+${initial_clearance}
 
 fix nvt moving nvt temp 300.0 300.0 1.0
 
-fix normal_force_print all print 10 "$(v_normal_force)" file ${OUTDIR}/normal_force_down_${SUFFIX}.txt screen no
+fix normal_force_print all print 10 "$(time) $(v_z_sphere) $(v_normal_force)" file ${OUTDIR}/normal_force_equilibration_${SUFFIX}.txt screen no
+
+run ${equilibrium_steps}
+
+fix normal_force_print all print 10 "$(time) $(v_z_sphere) $(v_normal_force)" file ${OUTDIR}/normal_force_down_${SUFFIX}.txt screen no
 
 fix motion top_layer move linear 0 0 $(-v_distance/(v_steps_down*dt))
 
@@ -35,7 +41,7 @@ unfix motion
 
 run $(v_equilibrium_steps/2)
 
-fix normal_force_print all print 10 "$(v_normal_force)" file ${OUTDIR}/normal_force_up_${SUFFIX}.txt screen no
+fix normal_force_print all print 10 "$(time) $(v_z_sphere) $(v_normal_force)" file ${OUTDIR}/normal_force_up_${SUFFIX}.txt screen no
 
 run $(v_equilibrium_steps/2)
 
