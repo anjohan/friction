@@ -1,9 +1,18 @@
 log log.down
 include in.common_variables
-read_restart restart.amorphous
-include in.potential
+# read_restart restart.amorphous
 
+units metal
+boundary p p p
+atom_style atomic
+
+read_data betacristobalite.data
+replicate $(round(v_Lx/v_a)+v_sphere_spacing) $(round(v_Ly/v_a)+v_sphere_spacing) $(round(v_total_height/v_a)+2)
+
+include in.potential
 include in.common_regions
+
+timestep 0.002
 
 group bottom_layer region bottom_layer
 group top_layer region top_layer
@@ -21,9 +30,9 @@ group sphere_caps union bottom_sphere_cap top_sphere_cap
 
 delete_atoms group to_be_deleted
 
-variable indent equal $a*1.0
+variable indent equal $a*3.0
 
-fix nvt sphere_caps nvt temp 300.0 300.0 1.0
+fix nvt sphere_caps nvt temp ${TEMP} ${TEMP} 1.0
 
 dump mydump all custom 1000 dump.down.bin id type x y z vx vy vz
 
@@ -34,7 +43,7 @@ compute com_top_sphere top_sphere com
 thermo 100
 thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_sphere[*] spcpu cpuremain
 
-velocity all create 300.0 277385 mom yes loop geom
+velocity all create ${TEMP} 277385 mom yes loop geom
 
 variable steps_down equal 40000
 variable distance equal ${indent}+${initial_clearance}
@@ -45,30 +54,19 @@ variable decreasing_velocity equal ${max_velocity}*(1-(step-2*${steps_down}/3)/(
 
 variable zero equal 0
 
-fix motion top_layer move linear 0 0 $(-v_distance/(v_steps_down*dt))
+fix nve_top top_layer nve
+fix set_force_top top_layer setforce 0.0 0.0 0.0
+velocity top_layer set 0.0 0.0 $(-v_distance/(v_steps_down*dt))
+#fix motion top_layer move linear 0 0 $(-v_distance/(v_steps_down*dt))
 run ${steps_down}
 
-# fix motion top_layer move variable v_zero v_zero NULL v_zero v_zero v_increasing_velocity
-#
-# run $(v_steps_down/3)
-#
-# unfix motion
-# fix motion top_layer move linear 0 0 ${max_velocity}
-#
-# run $(v_steps_down/3)
-#
-# unfix motion
-# fix motion top_layer move variable v_zero v_zero NULL v_zero v_zero v_decreasing_velocity
-#
-# run $(v_steps_down/3)
-# unfix motion
-
-velocity sphere_caps create 300.0 277385 mom yes loop geom
-
+velocity sphere_caps create ${TEMP} 277385 mom yes loop geom
 
 variable equilibrium_steps equal 20000
 
-unfix motion
+#unfix motion
+unfix set_force_top
+unfix nve_top
 #fix motion top_layer move linear 0 0 0
 run ${equilibrium_steps}
 
