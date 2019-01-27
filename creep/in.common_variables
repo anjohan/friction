@@ -19,4 +19,4 @@ variable bottom_of_top_layer equal ${bottom_of_top_sphere}+${height2}
 
 variable total_height equal 2*${layer_thickness}+${height1}+${height2}+${initial_clearance}
 
-variable TEMP equal 300.0
+variable TEMP equal 500.0

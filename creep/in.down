@@ -30,7 +30,7 @@ group sphere_caps union bottom_sphere_cap top_sphere_cap
 
 delete_atoms group to_be_deleted
 
-variable indent equal $a*3.0
+variable indent equal $a*5.0
 
 fix nvt sphere_caps nvt temp ${TEMP} ${TEMP} 1.0
 
@@ -45,7 +45,7 @@ thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_s
 
 velocity all create ${TEMP} 277385 mom yes loop geom
 
-variable steps_down equal 40000
+variable steps_down equal 100000
 variable distance equal ${indent}+${initial_clearance}
 variable max_velocity equal -1.5*${distance}/(${steps_down}*dt)
 
@@ -62,7 +62,7 @@ run ${steps_down}
 
 velocity sphere_caps create ${TEMP} 277385 mom yes loop geom
 
-variable equilibrium_steps equal 20000
+variable equilibrium_steps equal 50000
 
 #unfix motion
 unfix set_force_top
@@ -70,7 +70,7 @@ unfix nve_top
 #fix motion top_layer move linear 0 0 0
 run ${equilibrium_steps}
 
-fix normal_force_print all print 1 "$(c_normal_force)" file normal_force.txt screen no
+fix normal_force_print all print 10 "$(c_normal_force)" file normal_force.txt screen no
 
 run ${equilibrium_steps}
 

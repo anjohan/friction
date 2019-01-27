@@ -22,7 +22,7 @@ restart.creeped_10000: in.creep average_normal_force.txt in.potential
 	$(lmpcmd) -var normal_force $$(cat average_normal_force.txt) -in in.creep
 average_normal_force.txt: normal_force.txt find_normal_force.py
 	python find_normal_force.py
-normal_force.txt: in.down in.common_regions
+normal_force.txt: in.down in.common_regions in.common_variables
 	$(lmpcmd) -in in.down
 
 clean:
