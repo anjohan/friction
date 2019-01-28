@@ -6,7 +6,7 @@ read_restart restart.down
 include in.potential
 include in.common_variables
 
-dump mydump all custom 1000 dump.creep.bin id type x y z vx vy vz
+dump mydump all custom 100000 dump.creep.bin id type x y z vx vy vz
 
 velocity all create ${TEMP} 277385 mom yes rot yes loop geom
 velocity top_layer create ${TEMP} 277385 mom yes rot yes loop geom
@@ -18,9 +18,10 @@ fix nvt sphere_caps nvt temp ${TEMP} ${TEMP} 1.0
 
 compute normal_force top_layer reduce sum fz
 compute com_top_sphere top_sphere com
+compute com_top_layer top_layer com
 
 thermo 100
-thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_sphere[*] spcpu cpuremain
+thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_sphere[*] c_com_top_layer[3] spcpu cpuremain
 
 variable normal_force_per_atom atom -${normal_force}*mass/mass(top_layer)
 

@@ -34,7 +34,7 @@ variable indent equal $a*5.0
 
 fix nvt sphere_caps nvt temp ${TEMP} ${TEMP} 1.0
 
-dump mydump all custom 1000 dump.down.bin id type x y z vx vy vz
+dump mydump all custom 10000 dump.down.bin id type x y z vx vy vz
 
 compute normal_force top_layer reduce sum fz
 
@@ -62,17 +62,21 @@ run ${steps_down}
 
 velocity sphere_caps create ${TEMP} 277385 mom yes loop geom
 
-variable equilibrium_steps equal 50000
+variable equilibrium_steps equal 1000000
 
 #unfix motion
 unfix set_force_top
 unfix nve_top
 #fix motion top_layer move linear 0 0 0
+
+fix nvt sphere_caps nvt temp ${TEMP} ${TEMP} 1.0 drag 2.0
 run ${equilibrium_steps}
+
+fix nvt sphere_caps nvt temp ${TEMP} ${TEMP} 1.0
 
 fix normal_force_print all print 10 "$(c_normal_force)" file normal_force.txt screen no
 
-run ${equilibrium_steps}
+run $(v_equilibrium_steps/5)
 
 unfix normal_force_print
 unfix nvt
