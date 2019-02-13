@@ -1,38 +1,30 @@
-log log.creep
-#variable normal_force equal 28.552
+if "${ITERATION} == 1" then "log data/log.creep" else "log data/log.creep append"
 
-read_restart restart.down
+read_restart data/restart.creep_$(v_ITERATION-1)
+
+if "${ITERATION} == 1" then "reset_timestep 0"
 
 include in.potential
 include in.common_variables
 
-dump mydump all custom 100000 dump.creep.bin id type x y z vx vy vz
+dump mydump all custom 50000 data/dump.creep.*.bin id type x y z vx vy vz
 
-velocity all create ${TEMP} 277385 mom yes rot yes loop geom
-velocity top_layer create ${TEMP} 277385 mom yes rot yes loop geom
+# velocity all create ${TEMP} 277385 mom yes rot yes loop geom
+# velocity top_layer create ${TEMP} 277385 mom yes rot yes loop geom
 
 # group sphere_caps_and_top_layer union sphere_caps top_layer
 
-fix nvt_top top_layer nvt temp ${TEMP} ${TEMP} 1.0
-fix nvt sphere_caps nvt temp ${TEMP} ${TEMP} 1.0
+fix npt all npt temp ${TEMP} ${TEMP} 1.0 z ${z_pressure} ${z_pressure} 1.0
 
-compute normal_force top_layer reduce sum fz
 compute com_top_sphere top_sphere com
 compute com_top_layer top_layer com
 
-thermo 100
-thermo_style custom step time temp press pe ke etotal c_normal_force c_com_top_sphere[*] c_com_top_layer[3] spcpu cpuremain
+compute temp all temp
+compute pressure all pressure temp
 
-variable normal_force_per_atom atom -${normal_force}*mass/mass(top_layer)
+thermo 1000
+thermo_style custom step time temp press pe ke etotal c_pressure[3] c_com_top_sphere[*] c_com_top_layer[3] spcpu cpuremain
 
-fix force top_layer addforce 0 0 v_normal_force_per_atom
+run 500000
 
-reset_timestep 0
-
-run 10000
-#quit
-
-label loopstart
-write_restart restart.creeped_$(step)
-run 10000
-jump SELF loopstart
+write_restart data/restart.creep_${ITERATION}
