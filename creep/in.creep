@@ -1,4 +1,4 @@
-if "${ITERATION} == 1" then "log data/log.creep" else "log data/log.creep append"
+log data/log.creep_${ITERATION}
 
 read_restart data/restart.creep_$(v_ITERATION-1)
 
