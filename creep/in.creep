@@ -14,7 +14,7 @@ dump mydump all custom 50000 data/dump.creep.*.bin id type x y z vx vy vz
 
 # group sphere_caps_and_top_layer union sphere_caps top_layer
 
-fix npt all npt temp ${TEMP} ${TEMP} 1.0 z ${z_pressure} ${z_pressure} 1.0
+fix npt all npt temp ${TEMP} ${TEMP} 1.0 z ${z_pressure} ${z_pressure} 5.0
 
 compute com_top_sphere top_sphere com
 compute com_top_layer top_layer com
@@ -23,7 +23,7 @@ compute temp all temp
 compute pressure all pressure temp
 
 thermo 1000
-thermo_style custom step time temp press pe ke etotal c_pressure[3] c_com_top_sphere[*] c_com_top_layer[3] spcpu cpuremain
+thermo_style custom step time temp press pe ke etotal c_pressure[3] c_com_top_sphere[*] c_com_top_layer[3] lz spcpu cpuremain
 
 run 500000
 
