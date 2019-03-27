@@ -36,7 +36,13 @@ $(foreach iter,$(iters),$(eval $(call defcreep,$(iter))))
 data/average_z_pressure.txt: find_z_pressure.py data/restart.creep_0
 	python3 $<
 data/restart.creep_0: in.down in.common_regions in.common_variables
-	$(lmpcmd) -in in.down
+	$(lmpcmd) -var VARIANT 0 -in in.down
+
+data/restart.creep_passivated_0: in.down in.common_regions in.common_variables
+	$(lmpcmd) -var VARIANT 1 -in in.down
+
+data/restart.passivated: in.passivate in.common_regions in.common_variables
+	mpirun -n 1 $(lammps) -in $<
 
 clean:
 	rm -rf data

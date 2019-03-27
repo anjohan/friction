@@ -1,6 +1,27 @@
-log data/log.down
-include in.common_variables
 # read_restart restart.amorphous
+
+if "${VARIANT} == 0" then &
+    "variable SUFFIX_UNDERSCORE string ''" &
+    "variable SUFFIX string ''" &
+elif "${VARIANT} == 1" &
+    "variable SUFFIX string 'passivated'" &
+    "variable SUFFIX_UNDERSCORE string '_passivated'" &
+else &
+    "variable SUFFIX string 'water'"
+    "variable SUFFIX_UNDERSCORE string '_water'"
+
+include in.potential${SUFFIX_UNDERSCORE}
+log data/log.down${SUFFIX_UNDERSCORE}
+include in.common_regions
+include in.common_variables
+
+if "${VARIANT} == 0" then "jump sio2start"
+
+read data/restart.${SUFFIX}
+
+jump commonstart
+
+label sio2start
 
 units metal
 boundary p p p
@@ -9,8 +30,6 @@ atom_style atomic
 read_data betacristobalite.data
 replicate $(round(v_Lx/v_a)+v_sphere_spacing) $(round(v_Ly/v_a)+v_sphere_spacing) $(round(v_total_height/v_a))
 
-include in.potential
-include in.common_regions
 
 timestep 0.002
 
@@ -27,6 +46,8 @@ group top_sphere_cap subtract top_sphere top_layer
 group sphere_caps union bottom_sphere_cap top_sphere_cap
 
 delete_atoms group to_be_deleted
+
+label commonstart
 
 variable indent equal $a*5.0
 
@@ -77,5 +98,5 @@ run $(v_equilibrium_steps/5)
 unfix normal_force_print
 unfix nvt
 
-write_restart data/restart.down
-write_restart data/restart.creep_0
+write_restart data/restart.down${SUFFIX_UNDERSCORE}
+write_restart data/restart.creep${SUFFIX}_0

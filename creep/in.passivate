@@ -1,0 +1,41 @@
+log data/log.passivate
+include in.common_variables
+# read_restart restart.amorphous
+
+units metal
+boundary p p p
+atom_style atomic
+
+read_data betacristobalite_withH.data
+replicate $(round(v_Lx/v_a)+v_sphere_spacing) $(round(v_Ly/v_a)+v_sphere_spacing) $(round(v_total_height/v_a))
+
+include in.potential_SiO2H2O
+include in.common_regions
+
+timestep 0.0005
+
+group bottom_layer region bottom_layer
+group top_layer region top_layer
+group bottom_sphere region bottom_sphere
+group top_sphere region top_sphere
+
+group to_be_deleted subtract all bottom_layer top_layer bottom_sphere top_sphere
+
+group bottom_sphere_cap subtract bottom_sphere bottom_layer
+group top_sphere_cap subtract top_sphere top_layer
+
+group sphere_caps union bottom_sphere_cap top_sphere_cap
+
+delete_atoms group to_be_deleted
+
+group SiO2 union all
+
+fix passivate all passivate
+run 1
+unfix passivate
+
+group OHgroups subtract all SiO2
+group moving union OHgroups
+
+write_restart data/restart.passivated
+write_dump all xyz data/xyz.passivated
