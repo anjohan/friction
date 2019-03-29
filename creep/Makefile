@@ -26,7 +26,11 @@ endif
 
 define defcreep =
 data/restart.creep_$(1): data/restart.creep_$$(shell expr $(1) - 1) in.creep data/average_z_pressure.txt in.potential
-	$(lmpcmd) -var z_pressure $$$$(cat data/average_z_pressure.txt) -var ITERATION $(1) -in in.creep
+	$(lmpcmd) -var VARIANT 0 -var z_pressure $$$$(cat data/average_z_pressure.txt) -var ITERATION $(1) -in in.creep
+data/restart.creep_passivated_$(1): data/restart.creep_$$(shell expr $(1) - 1) in.creep data/average_z_pressure.txt in.potential
+	$(lmpcmd) -var VARIANT 1 -var z_pressure $$$$(cat data/average_z_pressure.txt) -var ITERATION $(1) -in in.creep
+data/restart.creep_water_$(1): data/restart.creep_$$(shell expr $(1) - 1) in.creep data/average_z_pressure.txt in.potential
+	$(lmpcmd) -var VARIANT 2 -var z_pressure $$$$(cat data/average_z_pressure.txt) -var ITERATION $(1) -in in.creep
 endef
 
 all: data/restart.creep_$(ITERATIONS)
@@ -43,6 +47,9 @@ data/restart.creep_0: in.down in.common_regions in.common_variables data/data.se
 
 data/restart.creep_passivated_0: in.down in.common_regions in.common_variables data/data.setup_passivated
 	$(lmpcmd) -var VARIANT 1 -in $<
+
+data/restart.creep_water_0: in.down in.common_regions in.common_variables data/data.setup_water
+	$(lmpcmd) -var VARIANT 2 -in $<
 
 data/data.setup: in.setup in.common_regions in.common_variables in.common_groups
 	$(lmpcmd) -in $<
