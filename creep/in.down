@@ -1,5 +1,9 @@
 # read_restart restart.amorphous
 
+units metal
+boundary p p p
+atom_style atomic
+
 if "${VARIANT} == 0" then &
     "variable SUFFIX_UNDERSCORE string ''" &
     "variable SUFFIX string ''" &
@@ -7,53 +11,23 @@ elif "${VARIANT} == 1" &
     "variable SUFFIX string 'passivated'" &
     "variable SUFFIX_UNDERSCORE string '_passivated'" &
 else &
-    "variable SUFFIX string 'water'"
+    "variable SUFFIX string 'water'" &
     "variable SUFFIX_UNDERSCORE string '_water'"
 
-include in.potential${SUFFIX_UNDERSCORE}
 log data/log.down${SUFFIX_UNDERSCORE}
-include in.common_regions
+
+read_data data/data.setup${SUFFIX_UNDERSCORE}
+
 include in.common_variables
-
-if "${VARIANT} == 0" then "jump sio2start"
-
-read data/restart.${SUFFIX}
-
-jump commonstart
-
-label sio2start
-
-units metal
-boundary p p p
-atom_style atomic
-
-read_data betacristobalite.data
-replicate $(round(v_Lx/v_a)+v_sphere_spacing) $(round(v_Ly/v_a)+v_sphere_spacing) $(round(v_total_height/v_a))
-
-
-timestep 0.002
-
-group bottom_layer region bottom_layer
-group top_layer region top_layer
-group bottom_sphere region bottom_sphere
-group top_sphere region top_sphere
-
-group to_be_deleted subtract all bottom_layer top_layer bottom_sphere top_sphere
-
-group bottom_sphere_cap subtract bottom_sphere bottom_layer
-group top_sphere_cap subtract top_sphere top_layer
-
-group sphere_caps union bottom_sphere_cap top_sphere_cap
-
-delete_atoms group to_be_deleted
-
-label commonstart
+include in.common_regions
+include in.common_groups
+include in.potential_etc${SUFFIX_UNDERSCORE}
 
 variable indent equal $a*5.0
 
 fix nvt all nvt temp ${TEMP} ${TEMP} 1.0
 
-dump mydump all custom 10000 data/dump.down.bin id type x y z vx vy vz
+dump mydump all custom 10 data/dump.down${SUFFIX_UNDERSCORE}.bin id type x y z vx vy vz
 
 compute temp all temp
 compute pressure all pressure temp
@@ -65,7 +39,8 @@ thermo_style custom step time temp press pe ke etotal c_pressure[3] c_com_top_sp
 
 velocity all create ${TEMP} 277385 mom yes loop geom
 
-variable steps_down equal 100000
+variable time_down equal 200
+variable steps_down equal $(round(v_time_down/dt))
 variable distance equal ${indent}+${initial_clearance}
 
 variable zero equal 0
@@ -80,7 +55,8 @@ run ${steps_down}
 unfix deform_z
 velocity all create ${TEMP} 277385 mom yes loop geom
 
-variable equilibrium_steps equal 100000
+variable equilibrium_time equal 100
+variable equilibrium_steps equal $(v_equilibrium_time/dt)
 
 #unfix motion
 #unfix set_force_top
@@ -91,12 +67,12 @@ fix nvt all nvt temp ${TEMP} ${TEMP} 1.0 drag 2.0
 run ${equilibrium_steps}
 
 
-fix normal_force_print all print 10 "$(c_pressure[3])" file data/z_pressure.txt screen no
+fix pressure_print all print 10 "$(c_pressure[3])" file data/z_pressure${SUFFIX_UNDERSCORE}.txt screen no
 
 run $(v_equilibrium_steps/5)
 
-unfix normal_force_print
+unfix pressure_print
 unfix nvt
 
 write_restart data/restart.down${SUFFIX_UNDERSCORE}
-write_restart data/restart.creep${SUFFIX}_0
+write_restart data/restart.creep${SUFFIX_UNDERSCORE}_0
