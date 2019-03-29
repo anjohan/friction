@@ -4,15 +4,7 @@ units metal
 boundary p p p
 atom_style atomic
 
-if "${VARIANT} == 0" then &
-    "variable SUFFIX_UNDERSCORE string ''" &
-    "variable SUFFIX string ''" &
-elif "${VARIANT} == 1" &
-    "variable SUFFIX string 'passivated'" &
-    "variable SUFFIX_UNDERSCORE string '_passivated'" &
-else &
-    "variable SUFFIX string 'water'" &
-    "variable SUFFIX_UNDERSCORE string '_water'"
+include in.choosevariant
 
 log data/log.down${SUFFIX_UNDERSCORE}
 
@@ -25,9 +17,11 @@ include in.potential_etc${SUFFIX_UNDERSCORE}
 
 variable indent equal $a*5.0
 
+minimize 1e-6 1e-6 1000 1000
+
 fix nvt all nvt temp ${TEMP} ${TEMP} 1.0
 
-dump mydump all custom 10 data/dump.down${SUFFIX_UNDERSCORE}.bin id type x y z vx vy vz
+dump mydump all custom 100000 data/dump.down${SUFFIX_UNDERSCORE}.bin id type x y z vx vy vz
 
 compute temp all temp
 compute pressure all pressure temp
