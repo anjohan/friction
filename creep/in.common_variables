@@ -2,7 +2,7 @@ variable a equal 7.16
 
 variable layer_thickness equal 2*$a
 variable radius1 equal 12*$a
-variable radius2 equal 20*$a
+variable radius2 equal 12*$a
 variable height1 equal 0.75*${radius1}
 variable height2 equal 0.75*${radius2}
 

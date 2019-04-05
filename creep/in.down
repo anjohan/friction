@@ -43,6 +43,8 @@ variable zero equal 0
 # velocity top_layer set 0.0 0.0 $(-v_distance/(v_steps_down*dt))
 #fix motion top_layer move linear 0 0 $(-v_distance/(v_steps_down*dt))
 
+fix remove_momentum all momentum 100 linear 1 1 1 angular
+
 fix deform_z all deform 1 z vel $(-v_distance/(v_steps_down*dt)) units box
 run ${steps_down}
 
