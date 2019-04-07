@@ -28,23 +28,18 @@ command = "sbatch --parsable " + " ".join(slurmargs) \
           + " " + jobscript + " " + args.lmpargs
 
 print(command)
-res = subprocess.run(command.split(), check=True,
-                     capture_output=True)
-jobid = int(res.stdout.decode("utf-8"))
+jobid = int(subprocess.check_output(command, shell=True).decode("utf-8"))
 
 logfile = f"slurm-{jobid}.out"
 
 def get_squeue():
-    tmp = subprocess.run("squeue", check=True, capture_output=True)
-    return tmp.stdout.decode("utf-8")
+    return subprocess.check_output("squeue").decode("utf-8")
 
 print(f"waiting for {jobid}")
 while str(jobid) in get_squeue():
     time.sleep(60)
 
-status = subprocess.run(["sacct", "-j", str(jobid)],
-                        check=True, capture_output=True)
-status = status.stdout.decode("utf-8")
+status = subprocess.check_output(f"sacct -j {jobid}", shell=True).decode("utf-8")
 
 if "CANCELLED" in status or "FAILED" in status:
     sys.exit(1)

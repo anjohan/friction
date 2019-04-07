@@ -17,7 +17,7 @@ include in.potential_etc${SUFFIX_UNDERSCORE}
 
 variable indent equal $a*5.0
 
-minimize 1e-6 1e-6 1000 1000
+if "${VARIANT} > 0" then "minimize 1e-6 1e-6 1000 1000"
 
 fix nvt all nvt temp ${TEMP} ${TEMP} 1.0
 
