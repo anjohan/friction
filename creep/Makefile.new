@@ -8,8 +8,8 @@ ITERATIONS ?= 30
 ifeq (${host},bigfacet)
 	TASKS ?= 8
 	GPU ?= --gpu
-	CREEPTIME ?= 01:00:00
-	DOWNTIME ?= 01:00:00
+	CREEPTIME ?= 11:00:00
+	DOWNTIME ?= 11:00:00
 else
 	TASKS ?= 320
 	CREEPTIME ?= 24:00:00

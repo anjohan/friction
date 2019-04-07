@@ -31,8 +31,8 @@ thermo_style custom step time temp press pe ke etotal c_pressure[3] c_com_top_sp
 variable creep_time equal 1000 # 1 ns
 
 #balance 1.1 shift xyz 10 1.1
-comm_style tiled
-balance 1.1 rcb
+#comm_style tiled
+#balance 1.1 rcb
 
 run $(v_creep_time/dt)
 
