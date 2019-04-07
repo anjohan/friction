@@ -13,7 +13,7 @@ include in.common_regions
 include in.common_groups
 
 group to_be_deleted subtract all bottom_layer top_layer bottom_sphere top_sphere
-group to_be_deleted union outside_cylinder
+#group to_be_deleted union outside_cylinder
 
 delete_atoms group to_be_deleted
 

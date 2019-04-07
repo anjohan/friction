@@ -9,14 +9,15 @@ if "${ITERATION} == 1" then "reset_timestep 0"
 include in.potential_etc${SUFFIX_UNDERSCORE}
 include in.common_variables
 
-dump mydump all custom 50000 data/dump.creep${SUFFIX_UNDERSCORE}.*.bin id type x y z vx vy vz
+dump mydump all custom 10000 data/dump.creep${SUFFIX_UNDERSCORE}.*.bin id type x y z vx vy vz
 
 # velocity all create ${TEMP} 277385 mom yes rot yes loop geom
 # velocity top_layer create ${TEMP} 277385 mom yes rot yes loop geom
 
 # group sphere_caps_and_top_layer union sphere_caps top_layer
 
-fix npt all npt temp ${TEMP} ${TEMP} 1.0 x 1.0 1.0 1.0 y 1.0 1.0 1.0 z ${z_pressure} ${z_pressure} 1.0
+#fix npt all npt temp ${TEMP} ${TEMP} 1.0 x 1.0 1.0 1.0 y 1.0 1.0 1.0 z ${z_pressure} ${z_pressure} 1.0
+fix npt all npt temp ${TEMP} ${TEMP} 1.0 z ${z_pressure} ${z_pressure} 1.0
 fix remove_momentum all momentum 100 linear 1 1 1 angular
 
 compute com_top_sphere top_sphere com
@@ -30,9 +31,9 @@ thermo_style custom step time temp press pe ke etotal c_pressure[3] c_com_top_sp
 
 variable creep_time equal 1000 # 1 ns
 
-#balance 1.1 shift xyz 10 1.1
-comm_style tiled
-balance 1.1 rcb
+balance 1.1 shift xyz 30 1.1
+#comm_style tiled
+#balance 1.1 rcb
 
 run $(v_creep_time/dt)
 
