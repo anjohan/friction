@@ -1,12 +1,12 @@
 variable a equal 7.16
 
-variable layer_thickness equal 2*$a
+variable layer_thickness equal 1*$a
 variable radius1 equal 12*$a
-variable radius2 equal 20*$a
+variable radius2 equal 12*$a
 variable height1 equal 0.75*${radius1}
 variable height2 equal 0.75*${radius2}
 
-variable sphere_spacing equal 1
+variable sphere_spacing equal 2
 
 variable Lx equal ceil(2*${height2}*sqrt(2*${radius2}/${height2}-1))
 variable Ly equal ${Lx}

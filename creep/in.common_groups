@@ -2,6 +2,7 @@ group bottom_layer region bottom_layer
 group top_layer region top_layer
 group bottom_sphere region bottom_sphere
 group top_sphere region top_sphere
+group outside_cylinder region outside_cylinder
 
 group bottom_sphere_cap subtract bottom_sphere bottom_layer
 group top_sphere_cap subtract top_sphere top_layer
