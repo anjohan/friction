@@ -39,8 +39,12 @@ iters = $(shell seq 1 $(ITERATIONS))
 
 $(foreach iter,$(iters),$(eval $(call defcreep,$(iter))))
 
-data/average_z_pressure%.txt: find_z_pressure.py data/restart.creep%_0
-	python3 $< $*
+data/average_z_pressure.txt: find_z_pressure.py data/restart.creep_0
+	python3 $<
+data/average_z_pressure_passivated.txt: find_z_pressure.py data/restart.creep_passivated_0
+	python3 $< _passivated
+data/average_z_pressure_water.txt: find_z_pressure.py data/restart.creep_water_0
+	python3 $< _water
 
 data/restart.creep_0: in.down in.common_regions in.common_variables data/data.setup
 	$(lmpcmd) -var VARIANT 0 -in $<
