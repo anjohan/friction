@@ -1,0 +1,26 @@
+include in.common_variables
+read_data data/data.setup_passivated
+
+variable number_density equal 0.0335 # Angstrom^-3
+
+variable vacuum_volume equal (2*${height1}+${initial_clearance})*$(PI)*(${radius1}^2)-2*$(PI)*(${height1}^2)/3*(3*${radius1}-${height1})
+variable number_of_molecules equal round(${vacuum_volume}*${number_density})
+
+print """
+tolerance 2.0
+
+filetype xyz
+output data/xyz.water
+
+nloop 10000
+
+structure data/xyz.passivated
+    number 1
+    fixed 0. 0. 0. 0. 0. 0.
+end structure
+
+structure water.xyz
+    number ${number_of_molecules}
+    inside cylinder $(lx/2) $(ly/2) ${layer_thickness} 0 0 1 ${radius1} $(2*v_height1+v_initial_clearance)
+end structure
+""" file data/add_water.inp
