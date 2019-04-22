@@ -13,8 +13,8 @@ else ifeq (${host},bigfacet)
 	#lmpcmd = mpirun -n $(GPUS) ~/kokkos_lammps/build/lmp -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
 	#lmpcmd = mpirun -n $$$$(expr $$$$(nproc) / 2) ~/lammps/build/lmp -sf gpu -pk gpu $(GPUS)
 else ifeq (${host},barrier)
-	lmpcmd = mpirun lmp
-	lammps = lmp
+	lammps = lmp -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
+	lmpcmd = mpirun -n $(GPUS) $(lammps)
 	#lmpcmd = mpirun -n $(GPUS) lmp_kokkos_cuda_mpi -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
 else ifeq ($(shell hostname | grep -o smaug),smaug)
 	lmpcmd = mpirun ~/lammps/build/lmp
@@ -39,8 +39,12 @@ iters = $(shell seq 1 $(ITERATIONS))
 
 $(foreach iter,$(iters),$(eval $(call defcreep,$(iter))))
 
-data/average_z_pressure%.txt: find_z_pressure.py data/restart.creep%_0
-	python3 $< $*
+data/average_z_pressure.txt: find_z_pressure.py data/restart.creep_0
+	python3 $<
+data/average_z_pressure_passivated.txt: find_z_pressure.py data/restart.creep_passivated_0
+	python3 $< _passivated
+data/average_z_pressure_water.txt: find_z_pressure.py data/restart.creep_water_0
+	python3 $< _water
 
 data/restart.creep_0: in.down in.common_regions in.common_variables data/data.setup
 	$(lmpcmd) -var VARIANT 0 -in $<
