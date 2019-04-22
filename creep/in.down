@@ -20,11 +20,11 @@ variable indent equal $a*3.0
 if "${VARIANT} > 0" then "minimize 1e-6 1e-6 1000 1000"
 
 if "${VARIANT}==2" then &
-    "fix nvt all npt temp ${TEMP} ${TEMP} 1.0 x 1.0 1.0 1.0 y 1.0 1.0 1.0" &
+    "fix nvt all npt temp ${TEMP} ${TEMP} 1.0 x 100.0 100.0 1.0 y 100.0 100.0 1.0" &
 else &
     "fix nvt all nvt temp ${TEMP} ${TEMP} 1.0"
 
-dump mydump all custom 100000 data/dump.down${SUFFIX_UNDERSCORE}.bin id type x y z vx vy vz
+dump mydump all custom 1000 data/dump.down${SUFFIX_UNDERSCORE}.bin id type x y z vx vy vz
 
 compute temp all temp
 compute pressure all pressure temp
@@ -32,7 +32,7 @@ compute pressure all pressure temp
 compute com_top_sphere top_sphere com
 
 thermo 100
-thermo_style custom step time temp press pe ke etotal c_pressure[3] c_com_top_sphere[*] spcpu cpuremain
+thermo_style custom step time temp press pe ke etotal c_pressure[*] lx ly lz spcpu cpuremain
 
 velocity all create ${TEMP} 277385 mom yes loop geom
 
