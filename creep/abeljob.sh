@@ -4,7 +4,7 @@
 # #SBATCH --account=nn9272k
 # #SBATCH --nodes=16
 #SBATCH --account=trocks
-#SBATCH --nodes=16
+#SBATCH --nodes=20
 #SBATCH --ntasks-per-node=16
 #SBATCH --cpus-per-task=1
 #SBATCH --mail-type=ALL
