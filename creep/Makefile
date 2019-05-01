@@ -64,5 +64,14 @@ data/data.setup_withH: addH_data.py data/data.setup
 data/data.setup_passivated: in.passivate data/data.setup_withH
 	mpirun -n 1 $(lammps) -in $<
 
+data/add_water.inp: in.write_packmol data/data.setup_passivated
+	$(lammps) -in $<
+
+data/xyz.water: data/add_water.inp
+	packmol < $<
+
+data/data.setup_water: xyz2data.py data/xyz.water
+	python $<
+
 clean:
 	rm -rf data
