@@ -14,7 +14,7 @@ dump mydump all custom 50000 data/dump.creep.*.bin id type x y z vx vy vz
 
 # group sphere_caps_and_top_layer union sphere_caps top_layer
 
-fix npt all npt temp ${TEMP} ${TEMP} 1.0 z ${z_pressure} ${z_pressure} 5.0
+fix npt all npt temp ${TEMP} ${TEMP} 1.0 z ${z_pressure} ${z_pressure} 1.0
 
 compute com_top_sphere top_sphere com
 compute com_top_layer top_layer com
