@@ -8,7 +8,7 @@ include in.choosevariant
 
 log data/log.down${SUFFIX_UNDERSCORE}_T${TEMP}
 
-read_data data/data.setup${SUFFIX_UNDERSCORE}_T${TEMP}
+read_data data/data.setup${SUFFIX_UNDERSCORE}
 
 include in.common_variables
 include in.common_regions
