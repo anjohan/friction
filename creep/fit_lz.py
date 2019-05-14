@@ -20,7 +20,9 @@ for data in datas:
     t += data["Step"]
     lz += data["Lz"]
 
-t = np.asarray(t) * 2e-6
+dt = 0.5e-6 if ("water" in input_files[0] or "passivated" in input_files[0]) else 2e-6
+
+t = np.asarray(t) * dt
 lz = np.asarray(lz)
 
 
