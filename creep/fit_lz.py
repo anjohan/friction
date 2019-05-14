@@ -1,49 +1,72 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 from scipy.signal import savgol_filter
 from scipy.optimize import curve_fit
 from logplotter import find_data
 
-R = 8.31 # J/mol/K
-T = 500 # K
+R = 8.31  # J/mol/K
+T = 500  # K
 
-i = 0
+output_file = sys.argv[1]
+input_files = sys.argv[2:]
+
+datas = map(find_data, input_files)
+
 t = []
 lz = []
-while True:
-    i += 1
-    print(i)
-    try:
-        data = find_data(f"data/log.creep_{i}")
-        t += data["Step"]
-        lz += data["Lz"]
-    except FileNotFoundError:
-        break
 
-t = np.asarray(t)*2e-6
+for data in datas:
+    t += data["Step"]
+    lz += data["Lz"]
+
+t = np.asarray(t) * 2e-6
 lz = np.asarray(lz)
 
+
+# plt.plot(t, lz)
+# plt.show()
+# sys.exit()
+
 N = len(t)
-window_length = N//40 + (N//40)%2 + 1
+window_length = N // 40 + (N // 40) % 2 + 1
 lz_smooth = savgol_filter(lz, window_length, 3)
 
 # t, lz = np.loadtxt("data/lz.dat", unpack=True)
 
-def prediction(t, t0, h0, factor):
-    return h0 - factor*np.log(1 + t/t0)
+t = t[:: len(t) // 1000]
+lz = lz[:: len(lz) // 1000]
+lz_smooth = lz_smooth[:: len(lz_smooth) // 1000]
 
-parameters, covariances = curve_fit(prediction, t, lz_smooth)
 
-t0, h0, factor = parameters
+def prediction(t, t0, h0, V0):
+    return h0 - t0 * V0 * np.log(1 + t / t0)
 
-lz_predict = prediction(t, t0, h0, factor)
+
+parameters, covariances = curve_fit(prediction, t, lz_smooth, maxfev=10000)
+# parameters, covariances = curve_fit(
+#     prediction, t, lz_smooth, bounds=(0.0001, (10, 150, 30)), maxfev=10000, method="trf"
+# )
+
+t0, h0, V0 = parameters
+uncertainty = np.sqrt(np.diag(covariances))
+
+lz_predict = prediction(t, t0, h0, V0)
 
 plt.plot(t, lz, label="raw data")
-plt.plot(t, lz_smooth, label="smoothed")
+plt.plot(t, lz_smooth, label="smooth")
 plt.plot(t, lz_predict, label="$h_0 - C\cdot\log(1+t/t_c)$")
 plt.legend()
 plt.xlabel("$t$ [ns]")
 plt.ylabel("$L_z$ [Å]")
 plt.savefig("lz.png")
 
-np.savetxt("data/lz_fit.dat", np.column_stack((t, lz, lz_smooth, lz_predict))[::100], header="t lz smooth fit")
+print(f"t0 = {t0} +- {uncertainty[0]}")
+print(f"h0 = {h0} +- {uncertainty[1]}")
+print(f"V0 = {V0} +- {uncertainty[2]}")
+
+
+np.savetxt(
+    f"/home/anders/master/data/creep/{output_file}",
+    np.column_stack((t, lz, lz_predict)),
+)
