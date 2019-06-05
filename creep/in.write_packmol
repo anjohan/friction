@@ -24,6 +24,5 @@ end structure
 structure water.xyz
     number ${number_of_molecules}
     inside box 0. 0. 0. $(lx) $(ly) $(lz)
-    #inside cylinder $(lx/2) $(ly/2) ${layer_thickness} 0 0 1 ${radius1} $(2*v_height1+v_initial_clearance)
 end structure
 """ file data/add_water.inp

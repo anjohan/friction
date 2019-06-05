@@ -45,7 +45,16 @@ def prediction(t, t0, h0, V0):
     return h0 - t0 * V0 * np.log(1 + t / t0)
 
 
+def t_predict(h, t0, h0, V0):
+    return t0 * (np.exp((h0 - h) / (V0 * t0)) - 1)
+
+
+# parameters, covariances = curve_fit(
+#     t_predict, lz, t, maxfev=10000, p0=[0.1, 120.0, 1.0]
+# )
+
 parameters, covariances = curve_fit(prediction, t, lz_smooth, maxfev=10000)
+
 # parameters, covariances = curve_fit(
 #     prediction, t, lz_smooth, bounds=(0.0001, (10, 150, 30)), maxfev=10000, method="trf"
 # )
