@@ -18,15 +18,6 @@ ase.io.write("alpha-quartz.eps", cell, rotation="10x,-10y", show_unit_cell=2)
 cell = cell.repeat([2, 2, 1])
 cell.set_cell([[a, 0, 0], [0, b * np.sqrt(3), 0], [0, 0, c]])
 cell.wrap()
-ase.geometry.get_duplicate_atoms(cell, delete=True)
-
-ase.io.write("alpha-quartz-orthogonal.eps", cell, rotation="10x,-10y", show_unit_cell=2)
-
-for eps in ["alpha-quartz.eps", "alpha-quartz-orthogonal.eps"]:
-    with open(eps, "r") as infile:
-        code = infile.read()
-    with open(eps, "w") as outfile:
-        outfile.write(code.replace("1.000 setlinewidth", "0.100 setlinewidth"))
 
 positions = cell.get_positions()
 atomic_numbers = cell.get_atomic_numbers()
@@ -48,3 +39,15 @@ with open("orthogonal_alpha_quartz.data", "w") as outfile:
     for i, atomic_number in enumerate(atomic_numbers):
         atom_type = 1 if atomic_number == 14 else 2
         outfile.write(f"{i+1} {atom_type} " + " ".join(map(str, positions[i])) + "\n")
+ase.geometry.get_duplicate_atoms(cell, delete=True)
+
+
+ase.io.write(
+    "alpha-quartz-orthogonal.eps", cell, rotation="90z,10x,-10y", show_unit_cell=2
+)
+
+for eps in ["alpha-quartz.eps", "alpha-quartz-orthogonal.eps"]:
+    with open(eps, "r") as infile:
+        code = infile.read()
+    with open(eps, "w") as outfile:
+        outfile.write(code.replace("1.000 setlinewidth", "0.100 setlinewidth"))
