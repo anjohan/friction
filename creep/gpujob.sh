@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --partition=normal
-#SBATCH --ntasks=8
-#SBATCH --gres=gpu:8
+#SBATCH --ntasks=4
+#SBATCH --gres=gpu:4
 #SBATCH --job-name=creep
 #SBATCH --cpus-per-task=2
 echo $CUDA_VISIBLE_DEVICES
-make GPUS=8
+make GPUS=4
