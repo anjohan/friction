@@ -14,8 +14,8 @@ else ifeq (${host},bigfacet)
 	#lmpcmd = mpirun -n $(GPUS) ~/kokkos_lammps/build/lmp -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
 	#lmpcmd = mpirun -n $$$$(expr $$$$(nproc) / 2) ~/lammps/build/lmp -sf gpu -pk gpu $(GPUS)
 else ifeq (${host},barrier)
-	lammps = lmp -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
-	lmpcmd = mpirun -n $(GPUS) $(lammps)
+	lammps = lmp -k on g 1 -sf kk -pk kokkos newton on neigh half binsize 7.5
+	lmpcmd = mpirun -n 1 $(lammps)
 	#lmpcmd = mpirun -n $(GPUS) lmp_kokkos_cuda_mpi -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
 else ifeq ($(shell hostname | grep -o smaug),smaug)
 	lmpcmd = mpirun ~/lammps/build/lmp
