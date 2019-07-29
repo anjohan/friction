@@ -70,7 +70,7 @@ plt.plot(t, lz_predict, label="$h_0 - C\cdot\log(1+t/t_c)$")
 plt.legend()
 plt.xlabel("$t$ [ns]")
 plt.ylabel("$L_z$ [Å]")
-plt.savefig("lz.png")
+plt.savefig(output_file[:-4] + "_lz.png")
 
 print(f"t0 = {t0} +- {uncertainty[0]}")
 print(f"h0 = {h0} +- {uncertainty[1]}")
