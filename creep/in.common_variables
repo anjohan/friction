@@ -4,7 +4,7 @@ variable a equal 4.9134
 variable b equal 8.51026
 variable c equal 5.4052
 
-variable layer_thickness equal 1*$c
+variable layer_thickness equal 2*$c
 variable radius1 equal 16*$c
 variable radius2 equal 16*$c
 variable height1 equal 0.75*${radius1}

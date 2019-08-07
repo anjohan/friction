@@ -7,13 +7,13 @@ atom_style atomic
 read_data orthogonal_alpha_quartz.data
 include in.potential_etc
 include in.common_variables
-replicate $(ceil(v_Lx/v_a)+v_sphere_spacing) $(ceil(v_Ly/v_b)+v_sphere_spacing) $(ceil(v_total_height/v_c))
+replicate $(ceil(v_Lx/v_a)+v_sphere_spacing) $(ceil(v_Ly/v_b)+v_sphere_spacing) $(round(v_total_height/v_c))
 
 include in.common_regions
 include in.common_groups
 
 group to_be_deleted subtract all bottom_layer top_layer bottom_sphere top_sphere
-group to_be_deleted union outside_cylinder
+# group to_be_deleted union outside_cylinder
 
 delete_atoms group to_be_deleted
 
