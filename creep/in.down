@@ -15,7 +15,7 @@ include in.common_regions
 include in.common_groups
 include in.potential_etc${SUFFIX_UNDERSCORE}
 
-variable indent equal $a*3.0
+variable indent equal $a*0.2
 
 if "${VARIANT} > 0" then "minimize 1e-6 1e-6 1000 1000"
 
