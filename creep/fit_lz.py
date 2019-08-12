@@ -46,11 +46,11 @@ def lz_analysis(output_file, input_files):
     lz = lz[:: len(lz) // 1000]
     lz_smooth = lz_smooth[:: len(lz_smooth) // 1000]
 
-    def prediction(t, t0, h0, V0):
-        return h0 - t0 * V0 * np.log(1 + t / t0)
+    def prediction(t, tc, h0, V0):
+        return h0 - tc * V0 * np.log(1 + t / tc)
 
-    def t_predict(h, t0, h0, V0):
-        return t0 * (np.exp((h0 - h) / (V0 * t0)) - 1)
+    def t_predict(h, tc, h0, V0):
+        return tc * (np.exp((h0 - h) / (V0 * tc)) - 1)
 
     # parameters, covariances = curve_fit(
     #     t_predict, lz, t, maxfev=10000, p0=[0.1, 120.0, 1.0]
@@ -62,10 +62,10 @@ def lz_analysis(output_file, input_files):
     #     prediction, t, lz_smooth, bounds=(0.0001, (10, 150, 30)), maxfev=10000, method="trf"
     # )
 
-    t0, h0, V0 = parameters
+    tc, h0, V0 = parameters
     uncertainty = np.sqrt(np.diag(covariances))
 
-    lz_predict = prediction(t, t0, h0, V0)
+    lz_predict = prediction(t, tc, h0, V0)
 
     plt.plot(t, lz, label="raw data")
     plt.plot(t, lz_smooth, label="smooth")
@@ -75,7 +75,7 @@ def lz_analysis(output_file, input_files):
     plt.ylabel("$L_z$ [Å]")
     plt.savefig(output_file[:-4] + "_lz.png")
 
-    print(f"t0 = {t0} +- {uncertainty[0]}")
+    print(f"tc = {tc} +- {uncertainty[0]}")
     print(f"h0 = {h0} +- {uncertainty[1]}")
     print(f"V0 = {V0} +- {uncertainty[2]}")
 
@@ -84,7 +84,7 @@ def lz_analysis(output_file, input_files):
         np.column_stack((t, lz, lz_predict, lz_smooth)),
     )
 
-    return t0, uncertainty[0], h0, uncertainty[1], V0, uncertainty[2]
+    return tc, uncertainty[0], h0, uncertainty[1], V0, uncertainty[2]
 
 
 lz_analysis(output_file, input_files)
