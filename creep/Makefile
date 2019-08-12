@@ -10,7 +10,7 @@ TEMPS = 400 450 500 550
 ifeq (${host},hp)
 	lmpcmd = mpirun lmp
 else ifeq (${host},bigfacet)
-	lmpcmd = mpirun -n $(GPUS) /lammps/lammps_kokkos2/src/lmp_kokkos_cuda_mpi -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
+	lmpcmd = mpirun -n $(GPUS) lmp -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
 	#lmpcmd = mpirun -n $(GPUS) ~/kokkos_lammps/build/lmp -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
 	#lmpcmd = mpirun -n $$$$(expr $$$$(nproc) / 2) ~/lammps/build/lmp -sf gpu -pk gpu $(GPUS)
 else ifeq (${host},barrier)
