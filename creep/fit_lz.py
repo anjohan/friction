@@ -8,9 +8,6 @@ from logplotter import find_data
 R = 8.31  # J/mol/K
 T = 500  # K
 
-output_file = sys.argv[1]
-input_files = sys.argv[2:]
-
 
 def lz_analysis(output_file, input_files):
 
@@ -67,17 +64,18 @@ def lz_analysis(output_file, input_files):
 
     lz_predict = prediction(t, tc, h0, V0)
 
-    plt.plot(t, lz, label="raw data")
-    plt.plot(t, lz_smooth, label="smooth")
-    plt.plot(t, lz_predict, label="$h_0 - C\cdot\log(1+t/t_c)$")
-    plt.legend()
-    plt.xlabel("$t$ [ns]")
-    plt.ylabel("$L_z$ [Å]")
-    plt.savefig(output_file[:-4] + "_lz.png")
+    if __name__ == "__main__":
+        plt.plot(t, lz, label="raw data")
+        plt.plot(t, lz_smooth, label="smooth")
+        plt.plot(t, lz_predict, label="$h_0 - C\cdot\log(1+t/t_c)$")
+        plt.legend()
+        plt.xlabel("$t$ [ns]")
+        plt.ylabel("$L_z$ [Å]")
+        plt.savefig(output_file[:-4] + "_lz.png")
 
-    print(f"tc = {tc} +- {uncertainty[0]}")
-    print(f"h0 = {h0} +- {uncertainty[1]}")
-    print(f"V0 = {V0} +- {uncertainty[2]}")
+        print(f"tc = {tc} +- {uncertainty[0]}")
+        print(f"h0 = {h0} +- {uncertainty[1]}")
+        print(f"V0 = {V0} +- {uncertainty[2]}")
 
     np.savetxt(
         f"/home/anders/master/data/creep/{output_file}",
@@ -87,4 +85,7 @@ def lz_analysis(output_file, input_files):
     return tc, uncertainty[0], h0, uncertainty[1], V0, uncertainty[2]
 
 
-lz_analysis(output_file, input_files)
+if __name__ == "__main__":
+    output_file = sys.argv[1]
+    input_files = sys.argv[2:]
+    lz_analysis(output_file, input_files)
