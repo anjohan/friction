@@ -50,10 +50,10 @@ data/average_z_pressure_water_T%.txt: find_z_pressure.py data/restart.creep_wate
 data/restart.creep_T%_0: in.down in.common_regions in.common_variables data/data.setup
 	$(lmpcmd) -var TEMP $* -var VARIANT 0 -in $<
 
-data/restart.creep_passivated_0: in.down in.common_regions in.common_variables data/data.setup_passivated
+data/restart.creep_passivated_T%_0: in.down in.common_regions in.common_variables data/data.setup_passivated
 	$(lmpcmd) -var TEMP $* -var VARIANT 1 -in $<
 
-data/restart.creep_water_0: in.down in.common_regions in.common_variables data/data.setup_water
+data/restart.creep_water_T%_0: in.down in.common_regions in.common_variables data/data.setup_water
 	$(lmpcmd) -var TEMP $* -var VARIANT 2 -in $<
 
 data/data.setup: in.setup in.common_regions in.common_variables in.common_groups
