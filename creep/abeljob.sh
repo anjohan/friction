@@ -1,6 +1,6 @@
 #!/bin/sh
 # Number of tasks (MPI ranks):
-#SBATCH --time='7-00:00:00'
+#SBATCH --time='3-00:00:00'
 # #SBATCH --account=nn9272k
 # #SBATCH --nodes=16
 #SBATCH --account=trocks
@@ -15,4 +15,4 @@ source /cluster/bin/jobsetup
 module load intel/2018.1
 module load intelmpi.intel
 
-make ITERATIONS=50 data/restart.creep_water_50
+make ITERATIONS=50 data/restart.creep_water_T500_50
