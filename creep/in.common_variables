@@ -1,8 +1,12 @@
-variable a equal 7.16
+variable beta_a equal 7.16
 
-variable layer_thickness equal 1*$a
-variable radius1 equal 12*$a
-variable radius2 equal 12*$a
+variable a equal 4.9134
+variable b equal 8.51026
+variable c equal 5.4052
+
+variable layer_thickness equal 2*$c
+variable radius1 equal 16*$c
+variable radius2 equal 16*$c
 variable height1 equal 0.75*${radius1}
 variable height2 equal 0.75*${radius2}
 
@@ -11,12 +15,10 @@ variable sphere_spacing equal 1
 variable Lx equal ceil(2*${height2}*sqrt(2*${radius2}/${height2}-1))
 variable Ly equal ${Lx}
 
-variable initial_clearance equal $a
+variable initial_clearance equal $c
 
 variable top_of_bottom_sphere equal ${layer_thickness}+${height1}
 variable bottom_of_top_sphere equal ${top_of_bottom_sphere}+${initial_clearance}
 variable bottom_of_top_layer equal ${bottom_of_top_sphere}+${height2}
 
 variable total_height equal 2*${layer_thickness}+${height1}+${height2}+${initial_clearance}
-
-variable TEMP equal 500.0

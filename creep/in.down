@@ -6,7 +6,7 @@ atom_style atomic
 
 include in.choosevariant
 
-log data/log.down${SUFFIX_UNDERSCORE}
+log data/log.down${SUFFIX_UNDERSCORE}_T${TEMP}
 
 read_data data/data.setup${SUFFIX_UNDERSCORE}
 
@@ -15,7 +15,7 @@ include in.common_regions
 include in.common_groups
 include in.potential_etc${SUFFIX_UNDERSCORE}
 
-variable indent equal $a*3.0
+variable indent equal $a*0.2
 
 if "${VARIANT} > 0" then "minimize 1e-6 1e-6 1000 1000"
 
@@ -24,7 +24,7 @@ if "${VARIANT}==2" then &
 else &
     "fix nvt all nvt temp ${TEMP} ${TEMP} 1.0"
 
-dump mydump all custom 10000 data/dump.down${SUFFIX_UNDERSCORE}.bin id type x y z vx vy vz
+dump mydump all custom 10000 data/dump.down${SUFFIX_UNDERSCORE}_T${TEMP}.bin id type x y z vx vy vz
 
 compute temp all temp
 compute pressure all pressure temp
@@ -70,12 +70,12 @@ balance 1.1 shift xyz 30 1.1
 run ${equilibrium_steps}
 
 
-fix pressure_print all print 10 "$(c_pressure[3])" file data/z_pressure${SUFFIX_UNDERSCORE}.txt screen no
+fix pressure_print all print 10 "$(c_pressure[3])" file data/z_pressure${SUFFIX_UNDERSCORE}_T${TEMP}.txt screen no
 
 run $(v_equilibrium_steps/5)
 
 unfix pressure_print
 unfix nvt
 
-write_restart data/restart.down${SUFFIX_UNDERSCORE}
-write_restart data/restart.creep${SUFFIX_UNDERSCORE}_0
+write_restart data/restart.down${SUFFIX_UNDERSCORE}_T${TEMP}
+write_restart data/restart.creep${SUFFIX_UNDERSCORE}_T${TEMP}_0
