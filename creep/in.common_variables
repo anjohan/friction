@@ -1,12 +1,12 @@
 variable beta_a equal 7.16
 
-variable a equal ${beta_a}
-variable b equal ${beta_a}
-variable c equal ${beta_a}
+# variable a equal ${beta_a}
+# variable b equal ${beta_a}
+# variable c equal ${beta_a}
 
-# variable a equal 4.9134
-# variable b equal 8.51026
-# variable c equal 5.4052
+variable a equal 4.9134
+variable b equal 8.51026
+variable c equal 5.4052
 
 variable layer_thickness equal 2*$c
 variable radius1 equal 12*$c

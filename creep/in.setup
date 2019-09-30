@@ -4,8 +4,8 @@ units metal
 boundary p p p
 atom_style atomic
 
-# read_data orthogonal_alpha_quartz.data
-read_data ./betacristobalite.data
+read_data orthogonal_alpha_quartz.data
+# read_data ./betacristobalite.data
 include in.potential_etc
 include in.common_variables
 replicate $(ceil(v_Lx/v_a)+v_sphere_spacing) $(ceil(v_Ly/v_b)+v_sphere_spacing) $(round(v_total_height/v_c))
