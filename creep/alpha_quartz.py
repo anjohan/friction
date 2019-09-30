@@ -22,6 +22,7 @@ cell.wrap()
 positions = cell.get_positions()
 atomic_numbers = cell.get_atomic_numbers()
 basis_vectors = cell.get_cell()
+ase.geometry.get_duplicate_atoms(cell, delete=True)
 
 with open("orthogonal_alpha_quartz.data", "w") as outfile:
     outfile.write("# Orthogonal alpha quartz supercell\n\n")
@@ -39,7 +40,6 @@ with open("orthogonal_alpha_quartz.data", "w") as outfile:
     for i, atomic_number in enumerate(atomic_numbers):
         atom_type = 1 if atomic_number == 14 else 2
         outfile.write(f"{i+1} {atom_type} " + " ".join(map(str, positions[i])) + "\n")
-ase.geometry.get_duplicate_atoms(cell, delete=True)
 
 
 ase.io.write(
