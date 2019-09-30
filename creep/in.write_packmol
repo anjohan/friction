@@ -1,7 +1,7 @@
 include in.common_variables
 read_data data/data.setup_passivated
 
-variable number_density equal 0.0335 # Angstrom^-3
+variable number_density equal 0.0333679 # Angstrom^-3
 
 #                              box            -                sphere caps                       -     disks (top+bottom)
 variable vacuum_volume equal $(lx)*$(ly)*$(lz)-2*$(PI)*(${height1}^2)/3*(3*${radius1}-${height1})-2*$(PI)*${layer_thickness}*(${radius1}^2)

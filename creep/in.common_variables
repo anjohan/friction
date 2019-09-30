@@ -9,8 +9,8 @@ variable c equal ${beta_a}
 # variable c equal 5.4052
 
 variable layer_thickness equal 2*$c
-variable radius1 equal 16*$c
-variable radius2 equal 16*$c
+variable radius1 equal 12*$c
+variable radius2 equal 12*$c
 variable height1 equal 0.75*${radius1}
 variable height2 equal 0.75*${radius2}
 
