@@ -24,7 +24,7 @@ else
 	lmpcmd = mpirun $(lammps)
 endif
 
-.PRECIOUS: log.% dump.%
+.SECONDARY:
 
 define defcreep =
 data/restart.creep_T%_$(1): data/restart.creep_T%_$$(shell expr $(1) - 1) in.creep data/average_z_pressure_T%.txt
