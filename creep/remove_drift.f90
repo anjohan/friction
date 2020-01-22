@@ -19,7 +19,7 @@ program remove_drift
 
     if (this_image() /= 1) goto 10
 
-    filename = "water_data/dump.creep_water_T500.0.bin"
+    filename = "/home/anders/data/dump.creep_water_T500.0.bin"
     call reader%open_file(filename)
     call reader%read_step()
     call get_cell
@@ -69,7 +69,7 @@ program remove_drift
     step = dstep*(this_image() - 1)
 
     steps: do
-        call reader%open_file("water_data/dump.creep_water_T500.*.bin", step)
+        call reader%open_file("/home/anders/data/dump.creep_water_T500.*.bin", step)
         if (.not. reader%has_next_step) exit steps
 
         call reader%read_step
@@ -99,7 +99,7 @@ program remove_drift
             end associate
         end do
 
-        open(newunit=u, file=replace_asterisk_with_step("water_data/dump.water_T500_nodrift.*.bin",step), &
+        open(newunit=u, file=replace_asterisk_with_step("/home/anders/data/dump.water_T500_nodrift.*.bin",step), &
              access="stream", action="write")
         call reader%write_to_file(u)
         close(u)

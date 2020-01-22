@@ -13,6 +13,7 @@ size = comm.Get_size()
 
 steps = np.arange(0, 101000, 100000)
 steps = np.arange(0, 74400000, 100000)
+steps = np.arange(0, 23800000, 100000)
 
 a = b = 4.9134
 c = 5.4052
@@ -45,9 +46,9 @@ quartz_soaps /= quartz_soap_norms
 
 
 def handle_step(step):
-    infile = f"/home/anders/ssd/creep/lowpress_quartz/water/dump.water_T500_nodrift.{step}.bin"
+    infile = f"/home/anders/data/dump.water_T500_nodrift.{step}.bin"
     outfile = (
-        f"/home/anders/ssd/creep/lowpress_quartz/water/dump.water_T500_struc_{step}.xyz"
+        f"/home/anders/data/dump.water_T500_struc_{step}.xyz"
     )
 
     with open(infile, "rb") as f:
