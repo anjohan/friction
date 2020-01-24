@@ -15,4 +15,4 @@ source /cluster/bin/jobsetup
 module load intel/2018.1
 module load intelmpi.intel
 
-make ITERATIONS=50 data/restart.creep_water_T500_50
+make ITERATIONS=5 water500

@@ -53,6 +53,8 @@ endef
 
 all: $(foreach indent,$(INDENTS),$(foreach temp,$(TEMPS),data/restart.creep_T$(temp)_I$(indent)_$(ITERATIONS)))
 
+water500: $(foreach indent,$(INDENTS),data/restart.creep_water_T500_I$(indent)_$(ITERATIONS))
+
 iters = $(shell seq 1 $(ITERATIONS))
 
 $(foreach indent,$(INDENTS),$(foreach iter,$(iters),$(eval $(call defcreep,$(indent),$(iter)))))
