@@ -1,15 +1,15 @@
 include in.choosevariant
 
-log data/log.creep${SUFFIX_UNDERSCORE}_T${TEMP}_${ITERATION}
+log data/log.creep${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}_${ITERATION}
 
-read_restart data/restart.creep${SUFFIX_UNDERSCORE}_T${TEMP}_$(v_ITERATION-1)
+read_restart data/restart.creep${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}_$(v_ITERATION-1)
 
 if "${ITERATION} == 1" then "reset_timestep 0"
 
 include in.potential_etc${SUFFIX_UNDERSCORE}
 include in.common_variables
 
-dump mydump all custom 100000 data/dump.creep${SUFFIX_UNDERSCORE}_T${TEMP}.*.bin id type x y z vx vy vz
+dump mydump all custom 100000 data/dump.creep${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}.*.bin id type x y z vx vy vz
 
 # velocity all create ${TEMP} 277385 mom yes rot yes loop geom
 # velocity top_layer create ${TEMP} 277385 mom yes rot yes loop geom
@@ -38,4 +38,4 @@ balance 1.1 shift xyz 30 1.1
 
 run $(v_creep_time/dt)
 
-write_restart data/restart.creep${SUFFIX_UNDERSCORE}_T${TEMP}_${ITERATION}
+write_restart data/restart.creep${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}_${ITERATION}

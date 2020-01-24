@@ -5,9 +5,10 @@ host=$(shell hostname)
 lammps=$(shell find ~ -name lmp 2> /dev/null)
 $(shell mkdir -p data)
 ITERATIONS ?= 50
-TEMPS = 400 450 500 550
+TEMPS ?= 400 450 500 550
+INDENTS ?= 0.0 0.2 0.4 0.6
 
-ifeq (${host},hp)
+ifeq (${host},dell)
 	lmpcmd = mpirun lmp
 	lammps = lmp
 else ifeq (${host},bigfacet)
@@ -27,35 +28,38 @@ endif
 .SECONDARY:
 
 define defcreep =
-data/restart.creep_T%_$(1): data/restart.creep_T%_$$(shell expr $(1) - 1) in.creep data/average_z_pressure_T%.txt
-	$(lmpcmd) -var TEMP $$* -var VARIANT 0 -var z_pressure $$$$(cat data/average_z_pressure_T$$*.txt) -var ITERATION $(1) -in in.creep
-data/restart.creep_passivated_T%_$(1): data/restart.creep_passivated_T%_$$(shell expr $(1) - 1) in.creep data/average_z_pressure_passivated_T%.txt
-	$(lmpcmd) -var TEMP $$* -var VARIANT 1 -var z_pressure $$$$(cat data/average_z_pressure_passivated_T$$*.txt) -var ITERATION $(1) -in in.creep
-data/restart.creep_water_T%_$(1): data/restart.creep_water_T%_$$(shell expr $(1) - 1) in.creep data/average_z_pressure_water_T%.txt
-	$(lmpcmd) -var TEMP $$* -var VARIANT 2 -var z_pressure $$$$(cat data/average_z_pressure_water_T$$*.txt) -var ITERATION $(1) -in in.creep
+data/restart.creep_T%_I$(1)_$(2): data/restart.creep_T%_I$(1)_$$(shell expr $(2) - 1) in.creep data/average_z_pressure_T%_I$(1).txt
+	$(lmpcmd) -var TEMP $$* -var VARIANT 0 -var z_pressure $$$$(cat data/average_z_pressure_T$$*_I$(1).txt) -var ITERATION $(2) -var INDENT $(1) -in in.creep
+data/restart.creep_passivated_T%_I$(1)_$(2): data/restart.creep_passivated_T%_I$(1)_$$(shell expr $(2) - 1) in.creep data/average_z_pressure_passivated_T%_I$(1).txt
+	$(lmpcmd) -var TEMP $$* -var VARIANT 1 -var z_pressure $$$$(cat data/average_z_pressure_passivated_T$$*_I$(1).txt) -var ITERATION $(1) -var INDENT $(1) -in in.creep
+data/restart.creep_water_T%_I$(1)_$(2): data/restart.creep_water_T%_I$(1)_$$(shell expr $(2) - 1) in.creep data/average_z_pressure_water_T%_I$(1).txt
+	$(lmpcmd) -var TEMP $$* -var VARIANT 2 -var z_pressure $$$$(cat data/average_z_pressure_water_T$$*_I$(1).txt) -var ITERATION $(2) -var INDENT $(1) -in in.creep
 endef
 
-all: $(foreach temp,$(TEMPS),data/restart.creep_T$(temp)_$(ITERATIONS))
+define defpress =
+data/average_z_pressure_T%_I$(1).txt: find_z_pressure.py data/restart.creep_T%_I$(1)_0
+	python3 $$< $$* $(1)
+data/average_z_pressure_passivated_T%_I$(1).txt: find_z_pressure.py data/restart.creep_passivated_T%_I$(1)_0
+	python3 $$< _passivated $$* $(1)
+data/average_z_pressure_water_T%_I$(1).txt: find_z_pressure.py data/restart.creep_water_T%_I$(1)_0
+	python3 $$< _water $$* $(1)
+data/restart.creep_T%_I$(1)_0: in.down in.common_regions in.common_variables data/data.setup
+	$(lmpcmd) -var TEMP $$* -var VARIANT 0 -var INDENT $(1) -in $$<
+data/restart.creep_passivated_T%_I$(1)_0: in.down in.common_regions in.common_variables data/data.setup_passivated
+	$(lmpcmd) -var TEMP $$* -var VARIANT 1 -var INDENT $(1) -in $$<
+data/restart.creep_water_T%_I$(1)_0: in.down in.common_regions in.common_variables data/data.setup_water
+	$(lmpcmd) -var TEMP $$* -var VARIANT 2 -var INDENT $(1) -in $$<
+endef
+
+all: $(foreach indent,$(INDENTS),$(foreach temp,$(TEMPS),data/restart.creep_T$(temp)_I$(indent)_$(ITERATIONS)))
 
 iters = $(shell seq 1 $(ITERATIONS))
 
-$(foreach iter,$(iters),$(eval $(call defcreep,$(iter))))
+$(foreach indent,$(INDENTS),$(foreach iter,$(iters),$(eval $(call defcreep,$(indent),$(iter)))))
+$(foreach indent,$(INDENTS),$(eval $(call defpress,$(indent))))
 
-data/average_z_pressure_T%.txt: find_z_pressure.py data/restart.creep_T%_0
-	python3 $< $*
-data/average_z_pressure_passivated_T%.txt: find_z_pressure.py data/restart.creep_passivated_T%_0
-	python3 $< _passivated $*
-data/average_z_pressure_water_T%.txt: find_z_pressure.py data/restart.creep_water_T%_0
-	python3 $< _water $*
 
-data/restart.creep_T%_0: in.down in.common_regions in.common_variables data/data.setup
-	$(lmpcmd) -var TEMP $* -var VARIANT 0 -in $<
 
-data/restart.creep_passivated_T%_0: in.down in.common_regions in.common_variables data/data.setup_passivated
-	$(lmpcmd) -var TEMP $* -var VARIANT 1 -in $<
-
-data/restart.creep_water_T%_0: in.down in.common_regions in.common_variables data/data.setup_water
-	$(lmpcmd) -var TEMP $* -var VARIANT 2 -in $<
 
 data/data.setup: in.setup in.common_regions in.common_variables in.common_groups
 	$(lmpcmd) -in $<
