@@ -6,7 +6,7 @@ lammps=$(shell find ~ -name lmp 2> /dev/null)
 $(shell mkdir -p data)
 ITERATIONS ?= 50
 TEMPS ?= 400 450 500 550
-INDENTS ?= 0.0 0.2 0.4 0.6
+INDENTS ?= 0.0 0.2 0.4 0.6 0.8 1.0
 
 ifeq (${host},dell)
 	lmpcmd = mpirun lmp
