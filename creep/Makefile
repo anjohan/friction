@@ -2,27 +2,27 @@
 
 GPUS ?= 4
 host=$(shell hostname)
-lammps=$(shell find ~ -name lmp 2> /dev/null)
+lammps ?= $(shell find ~ -name lmp 2> /dev/null)
 $(shell mkdir -p data)
 ITERATIONS ?= 50
 TEMPS ?= 400 450 500 550
 INDENTS ?= 0.0 0.2 0.4 0.6 0.8 1.0
 
 ifeq (${host},dell)
-	lmpcmd = mpirun lmp
-	lammps = lmp
+	lmpcmd ?= mpirun lmp
+	lammps ?= lmp
 else ifeq (${host},bigfacet)
-	lmpcmd = mpirun -n $(GPUS) lmp -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
+	lmpcmd ?= mpirun -n $(GPUS) lmp -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
 	#lmpcmd = mpirun -n $(GPUS) ~/kokkos_lammps/build/lmp -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
 	#lmpcmd = mpirun -n $$$$(expr $$$$(nproc) / 2) ~/lammps/build/lmp -sf gpu -pk gpu $(GPUS)
 else ifeq (${host},barrier)
-	lammps = lmp -k on g 1 -sf kk -pk kokkos newton on neigh half binsize 7.5
-	lmpcmd = mpirun -n 1 $(lammps)
+	lammps ?= lmp -k on g 1 -sf kk -pk kokkos newton on neigh half binsize 7.5
+	lmpcmd ?= mpirun -n 1 $(lammps)
 	#lmpcmd = mpirun -n $(GPUS) lmp_kokkos_cuda_mpi -k on g $(GPUS) -sf kk -pk kokkos newton on neigh half binsize 7.5
 else ifeq ($(shell hostname | grep -o smaug),smaug)
-	lmpcmd = mpirun ~/lammps/build/lmp
+	lmpcmd ?= mpirun ~/lammps/build/lmp
 else
-	lmpcmd = mpirun $(lammps)
+	lmpcmd ?= mpirun $(lammps)
 endif
 
 .SECONDARY:
