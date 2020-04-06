@@ -5,8 +5,7 @@ import matplotlib.pyplot as plt
 
 plt.style.use("seaborn")
 
-indents = [0.0, 0.2, 0.4, 0.6, 0.8]
-max_iter = 5
+indents = [0.0, 0.2, 0.4, 0.6, 0.8, 1.0]
 diff = []
 pzz = []
 
@@ -23,11 +22,16 @@ for indent in indents:
         * 0.0001
     )
     pzz.append(Pzz)
-    for i in range(1, max_iter + 1):
-        f = f"/home/anders/ssd/creep/varpress/log.creep_water_T500_I{indent}_{i}"
-        data = find_data(f)
-        step += data["Step"]
-        Lz += data["Lz"]
+    i = 1
+    while True:
+        try:
+            f = f"/home/anders/ssd/creep/varpress/log.creep_water_T500_I{indent}_{i}"
+            data = find_data(f)
+            Lz += data["Lz"]
+            step += data["Step"][: len(data["Lz"])]
+        except FileNotFoundError:
+            break
+        i += 1
 
     Lz = savgol_filter(Lz, 51, 1)
     diff.append(Lz[0] - Lz[-1])
