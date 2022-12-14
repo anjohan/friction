@@ -2,7 +2,7 @@
 
 GPUS ?= 4
 host=$(shell hostname)
-lammps ?= $(shell find ~ -name lmp 2> /dev/null)
+lammps ?= lmp #$(shell find ~ -name lmp 2> /dev/null)
 $(shell mkdir -p data)
 ITERATIONS ?= 50
 TEMPS ?= 400 450 500 550

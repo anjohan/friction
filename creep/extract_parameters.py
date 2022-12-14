@@ -20,16 +20,16 @@ def V0simple(T, V):
 
 
 for i, temp in enumerate(T):
-    output = f"quartz_infinite_T{temp:.0f}.dat"
+    output = f"T{temp:.0f}_I1.dat"
     inputs = [
-        f"quartz_infinite_temp_data/log.creep_T{temp:.0f}_{i}" for i in range(1, 51)
+        f"data/log.creep_T{temp:.0f}_I1.0_{i}" for i in range(1, 51)
     ]
     tc[i], tc_sigma, h0, h0_sigma, V0[i], V0_sigma = lz_analysis(output, inputs)
 
 print(V0)
 a, b = np.polyfit(1 / (R * T), np.log(V0), 1)
 np.savetxt(
-    "/home/anders/master/data/creep/V0.dat",
+    "V0.dat",
     np.column_stack((1 / (R * T), V0, np.exp(b + a / (R * T)))),
 )
 

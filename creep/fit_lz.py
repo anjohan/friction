@@ -78,7 +78,7 @@ def lz_analysis(output_file, input_files):
         print(f"V0 = {V0} +- {uncertainty[2]}")
 
     np.savetxt(
-        f"/home/anders/master/data/creep/{output_file}",
+        output_file,
         np.column_stack((t, lz, lz_predict, lz_smooth)),
     )
 
