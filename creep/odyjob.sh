@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH -p "seas_gpu"
-#SBATCH --time='1-00:00:00'
+#SBATCH --time='2-00:00:00'
 ##SBATCH -n 4
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=1
@@ -26,4 +26,4 @@ fi
 
 export FLUX=1
 
-make ITERATIONS=100 INDENTS=$2 TEMPS=$1 lmpcmd="$lmp -sf kk -k on g 1 -pk kokkos newton on neigh half binsize 7.5" data/restart.creep_T${1}_I${2}_100
+make GEOMETRY=$3 ITERATIONS=100 INDENTS=$2 TEMPS=$1 lmpcmd="$lmp -sf kk -k on g 1 -pk kokkos newton on neigh half binsize 7.5" data/restart.creep_T${1}_I${2}_100_${3}

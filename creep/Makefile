@@ -7,6 +7,7 @@ $(shell mkdir -p data)
 ITERATIONS ?= 50
 TEMPS ?= 400 450 500 550
 INDENTS ?= 0.0 0.2 0.4 0.6 0.8 1.0
+GEOMETRY ?= sphere
 
 ifeq (${host},dell)
 	lmpcmd ?= mpirun lmp
@@ -28,8 +29,8 @@ endif
 .SECONDARY:
 
 define defcreep =
-data/restart.creep_T%_I$(1)_$(2): data/restart.creep_T%_I$(1)_$$(shell expr $(2) - 1) in.creep data/average_z_pressure_T%_I$(1).txt
-	$(lmpcmd) -var TEMP $$* -var VARIANT 0 -var z_pressure $$$$(cat data/average_z_pressure_T$$*_I$(1).txt) -var ITERATION $(2) -var INDENT $(1) -in in.creep
+data/restart.creep_T%_I$(1)_$(2)_$(GEOMETRY): data/restart.creep_T%_I$(1)_$$(shell expr $(2) - 1)_$(GEOMETRY) in.creep data/average_z_pressure_T%_I$(1)_$(GEOMETRY).txt
+	$(lmpcmd) -var TEMP $$* -var VARIANT 0 -var z_pressure $$$$(cat data/average_z_pressure_T$$*_I$(1)_$(GEOMETRY).txt) -var ITERATION $(2) -var INDENT $(1) -var GEOMETRY $(GEOMETRY) -in in.creep
 data/restart.creep_passivated_T%_I$(1)_$(2): data/restart.creep_passivated_T%_I$(1)_$$(shell expr $(2) - 1) in.creep data/average_z_pressure_passivated_T%_I$(1).txt
 	$(lmpcmd) -var TEMP $$* -var VARIANT 1 -var z_pressure $$$$(cat data/average_z_pressure_passivated_T$$*_I$(1).txt) -var ITERATION $(1) -var INDENT $(1) -in in.creep
 data/restart.creep_water_T%_I$(1)_$(2): data/restart.creep_water_T%_I$(1)_$$(shell expr $(2) - 1) in.creep data/average_z_pressure_water_T%_I$(1).txt
@@ -37,21 +38,21 @@ data/restart.creep_water_T%_I$(1)_$(2): data/restart.creep_water_T%_I$(1)_$$(she
 endef
 
 define defpress =
-data/average_z_pressure_T%_I$(1).txt: find_z_pressure.py data/restart.creep_T%_I$(1)_0
-	python3 $$< $$* $(1)
+data/average_z_pressure_T%_I$(1)_$(GEOMETRY).txt: find_z_pressure.py data/restart.creep_T%_I$(1)_0_$(GEOMETRY)
+	python3 $$< $(GEOMETRY) $$* $(1)
 data/average_z_pressure_passivated_T%_I$(1).txt: find_z_pressure.py data/restart.creep_passivated_T%_I$(1)_0
 	python3 $$< _passivated $$* $(1)
 data/average_z_pressure_water_T%_I$(1).txt: find_z_pressure.py data/restart.creep_water_T%_I$(1)_0
 	python3 $$< _water $$* $(1)
-data/restart.creep_T%_I$(1)_0: in.down in.common_regions in.common_variables data/data.setup
-	$(lmpcmd) -var TEMP $$* -var VARIANT 0 -var INDENT $(1) -in $$<
+data/restart.creep_T%_I$(1)_0_$(GEOMETRY): in.down in.common_regions_$(GEOMETRY) in.common_variables data/data.setup_$(GEOMETRY)
+	$(lmpcmd) -var TEMP $$* -var VARIANT 0 -var INDENT $(1) -var GEOMETRY $(GEOMETRY) -in $$<
 data/restart.creep_passivated_T%_I$(1)_0: in.down in.common_regions in.common_variables data/data.setup_passivated
 	$(lmpcmd) -var TEMP $$* -var VARIANT 1 -var INDENT $(1) -in $$<
 data/restart.creep_water_T%_I$(1)_0: in.down in.common_regions in.common_variables data/data.setup_water
 	$(lmpcmd) -var TEMP $$* -var VARIANT 2 -var INDENT $(1) -in $$<
 endef
 
-all: $(foreach indent,$(INDENTS),$(foreach temp,$(TEMPS),data/restart.creep_T$(temp)_I$(indent)_$(ITERATIONS)))
+all: $(foreach indent,$(INDENTS),$(foreach temp,$(TEMPS),data/restart.creep_T$(temp)_I$(indent)_$(ITERATIONS)_$(GEOMETRY)))
 
 water500: $(foreach indent,$(INDENTS),data/restart.creep_water_T500_I$(indent)_$(ITERATIONS))
 
@@ -63,8 +64,8 @@ $(foreach indent,$(INDENTS),$(eval $(call defpress,$(indent))))
 
 
 
-data/data.setup: in.setup in.common_regions in.common_variables in.common_groups
-	$(lmpcmd) -in $<
+data/data.setup_$(GEOMETRY): in.setup in.common_regions_$(GEOMETRY) in.common_variables in.common_groups
+	$(lmpcmd) -var GEOMETRY $(GEOMETRY) -in $<
 
 data/data.setup_withH: addH_data.py data/data.setup
 	python $^ $@

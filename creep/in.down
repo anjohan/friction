@@ -4,12 +4,12 @@ atom_style atomic
 
 include in.choosevariant
 
-log data/log.down${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}
+log data/log.down${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}_${GEOMETRY}
 
-read_data data/data.setup${SUFFIX_UNDERSCORE}
+read_data data/data.setup${SUFFIX_UNDERSCORE}_${GEOMETRY}
 
 include in.common_variables
-include in.common_regions
+include in.common_regions_${GEOMETRY}
 include in.common_groups
 include in.potential_etc${SUFFIX_UNDERSCORE}
 
@@ -22,7 +22,7 @@ if "${VARIANT}==2" then &
 else &
     "fix nvt all nvt temp ${TEMP} ${TEMP} 1.0"
 
-dump mydump all custom 10000 data/dump.down${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}.bin id type x y z vx vy vz
+dump mydump all custom 10000 data/dump.down${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}_${GEOMETRY}.bin id type x y z vx vy vz
 
 compute temp all temp
 compute pressure all pressure temp
@@ -68,12 +68,12 @@ balance 1.1 shift xyz 30 1.1
 run ${equilibrium_steps}
 
 
-fix pressure_print all print 10 "$(c_pressure[3])" file data/z_pressure${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}.txt screen no
+fix pressure_print all print 10 "$(c_pressure[3])" file data/z_pressure${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}_${GEOMETRY}.txt screen no
 
 run $(v_equilibrium_steps/5)
 
 unfix pressure_print
 unfix nvt
 
-write_restart data/restart.down${SUFFIX_UNDERSCORE}_T${TEMP}_I{INDENT}
-write_restart data/restart.creep${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}_0
+write_restart data/restart.down${SUFFIX_UNDERSCORE}_T${TEMP}_I{INDENT}_${GEOMETRY}
+write_restart data/restart.creep${SUFFIX_UNDERSCORE}_T${TEMP}_I${INDENT}_0_${GEOMETRY}
