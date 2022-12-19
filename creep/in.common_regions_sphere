@@ -1,0 +1,7 @@
+region bottom_layer block INF INF INF INF INF ${layer_thickness}
+region bottom_sphere sphere $(lx/2) $(ly/2) $(v_top_of_bottom_sphere-v_radius1) ${radius1}
+
+region top_sphere sphere $(lx/2) $(ly/2) $(v_bottom_of_top_sphere+v_radius2) ${radius2}
+region top_layer block INF INF INF INF ${bottom_of_top_layer} $(v_bottom_of_top_layer+v_layer_thickness)
+
+region outside_cylinder cylinder z $(lx/2) $(ly/2) $(v_Lx/2) INF INF side out

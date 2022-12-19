@@ -1,3 +1,4 @@
+*.dat
 remove_drift
 *.tar.gz
 *.out
